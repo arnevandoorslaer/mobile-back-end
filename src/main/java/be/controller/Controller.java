@@ -12,6 +12,14 @@ public class Controller {
     CleverService service;
 
     public Controller() {
+        //get event
 
+        //add event
+
+        //add user
+
+        //get user
+
+        //add user to event
     }
 }

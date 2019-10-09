@@ -22,9 +22,9 @@ public class User {
     @NotNull(message = "username can't be null")
     @NotEmpty(message = "username can't be empty")
     private String username;
-    @NotNull(message = "password can't be null")
-    @NotEmpty(message = "password can't be empty")
-    private String password;
+    @NotNull(message = "iban can't be null")
+    @NotEmpty(message = "iban can't be empty")
+    private String iban;
 
     public User() {
 
@@ -33,7 +33,6 @@ public class User {
     public User(String lastname, String firstname, String username, String password) {
         setLastname(lastname);
         setFirstname(firstname);
-        setPassword(password);
         setUsername(username);
     }
 
@@ -61,15 +60,11 @@ public class User {
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
+    public String getIBAN() {
+        return iban;
     }
 
-    private void setPassword(String password) {
-        this.password = password;
-    }
-
-    public boolean checkCredentials(String username, String password) {
-        return this.username.equals(username) && this.password.equals(password);
+    public void setIBAN(String iban) {
+        this.iban = iban;
     }
 }
