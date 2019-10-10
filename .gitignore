@@ -24,5 +24,3 @@ out/*
 src/main/resources/*
 
 lib/*
-
-build.gradle
