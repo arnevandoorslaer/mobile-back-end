@@ -1,15 +1,22 @@
 package be.model;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
 
+@Entity
 public class Event {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(columnDefinition = "serial")
+    @NotNull(message = "id can't be null")
+    private long id;
     private String eventName;
     private LocalDate startDate, endDate;
     private String location;
-    private List<User> participants;
+    private ArrayList<User> participants;
     private String extraInfo;
     private String picPath;
 
@@ -17,7 +24,7 @@ public class Event {
         participants = new ArrayList<>();
     }
 
-    public List<User> getParticipants() {
+    public ArrayList<User> getParticipants() {
         return participants;
     }
 
