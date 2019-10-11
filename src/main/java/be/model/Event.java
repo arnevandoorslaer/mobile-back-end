@@ -24,6 +24,10 @@ public class Event {
         participants = new ArrayList<>();
     }
 
+    public Object getId() {
+        return this.id;
+    }
+
     public ArrayList<User> getParticipants() {
         return participants;
     }
@@ -83,4 +87,5 @@ public class Event {
     public void setPicPath(String picPath) {
         this.picPath = picPath;
     }
+
 }
