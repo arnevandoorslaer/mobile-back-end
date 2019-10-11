@@ -95,9 +95,14 @@ public class Controller {
         }
     }
 
+    @GetMapping("/event/{eventid}/participant/")
+    public Object getParticipants(@PathVariable("eventid") long eventId) {
+        return service.getParticipants(eventId);
+    }
+
     @PostMapping("/event/{eventid}/participants/add/{userid}")
     public Object addParticipant(@PathVariable("eventid") long eventId, @PathVariable("userid") long userId) {
-        service.addParticipant(eventId, userId);
+        service.addParticipant(userId, eventId);
+        return true;
     }
-    //add user to event
 }
