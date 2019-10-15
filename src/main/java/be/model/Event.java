@@ -24,7 +24,7 @@ public class Event {
         participants = new ArrayList<>();
     }
 
-    public Object getId() {
+    public long getId() {
         return this.id;
     }
 

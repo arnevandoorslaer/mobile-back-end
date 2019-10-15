@@ -23,6 +23,10 @@ public class CleverService {
         return (ArrayList<User>) userRepository.findAll();
     }
 
+    public User getUser(long id) {
+        return userRepository.getOne(id);
+    }
+
     public void addUser(User user){
         userRepository.save(user);
     }
@@ -33,6 +37,10 @@ public class CleverService {
 
     public void updateUser(User user){
         userRepository.save(user);
+    }
+
+    public Event getEvent(long id) {
+        return eventRepository.getOne(id);
     }
 
     public ArrayList<Event> getEvents(){

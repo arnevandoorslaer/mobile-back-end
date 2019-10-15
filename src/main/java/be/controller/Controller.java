@@ -40,7 +40,7 @@ public class Controller {
     }
 
     @GetMapping("/user/get/{id}")
-    public Object getEvent(@PathVariable("id") long id) {
+    public Object getUser(@PathVariable("id") long id) {
         return service.getUser(id);
     }
 
