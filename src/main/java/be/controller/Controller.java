@@ -101,8 +101,7 @@ public class Controller {
     }
 
     @PostMapping("/event/{eventid}/participants/add/{userid}")
-    public Object addParticipant(@PathVariable("eventid") long eventId, @PathVariable("userid") long userId) {
+    public void addParticipant(@PathVariable("eventid") long eventId, @PathVariable("userid") long userId) {
         service.addParticipant(userId, eventId);
-        return true;
     }
 }

@@ -3,6 +3,10 @@ package be.model;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 @Entity
 public class User {
@@ -23,6 +27,9 @@ public class User {
     @NotNull(message = "iban can't be null")
     @NotEmpty(message = "iban can't be empty")
     private String iban;
+    @NotNull(message = "password can't be null")
+    @NotEmpty(message = "password can't be empty")
+    private String password;
 
     public User() {}
 
@@ -31,6 +38,17 @@ public class User {
         setLastname(lastname);
         setFirstname(firstname);
         setUsername(username);
+        setPasswordHashed(password);
+    }
+
+    public void setPassword(String password) {
+        if (password == null) throw new ModelException("password can't be null");
+        if (password.isEmpty()) throw new ModelException("password can't be empty");
+        this.password = password;
+    }
+
+    public String getPassword() {
+        return this.password;
     }
 
     public long getId() {
@@ -76,4 +94,45 @@ public class User {
         if (iban.isEmpty()) throw new ModelException("iban can't be empty");
         this.iban = iban;
     }
+
+    private String hashPassword(String password) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+        //create MessageDigest
+        MessageDigest crypt = MessageDigest.getInstance("SHA-512");
+        //reset
+        crypt.reset();
+        //update
+        byte[] passwordBytes = password.getBytes("UTF-8");
+        crypt.update(passwordBytes);
+        //digest
+        byte[] digest = crypt.digest();
+        //convert to String
+        BigInteger digestAsBigInteger = new BigInteger(1, digest);
+        //return hashed password
+        return digestAsBigInteger.toString(16);
+    }
+
+    public void setPasswordHashed(String password) {
+        if (password.trim().isEmpty()) {
+            throw new ModelException("Geen paswoord gegeven.");
+        }
+        try {
+            setPassword(hashPassword(password));
+        } catch (Exception e) {
+            throw new ModelException(e.getMessage(), e);
+        }
+    }
+
+    public boolean isCorrectPassword(String password) {
+        if(password.isEmpty()){
+            throw new ModelException("Geen paswoord gegeven.");
+        }
+        String p;
+        try {
+            p = hashPassword(password);
+        } catch (Exception e) {
+            throw new ModelException(e.getMessage(), e);
+        }
+        return getPassword().equals(p);
+    }
+
 }
