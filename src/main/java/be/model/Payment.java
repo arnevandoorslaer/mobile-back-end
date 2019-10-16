@@ -13,10 +13,14 @@ public class Payment {
     @Column(columnDefinition = "serial")
     @NotNull(message = "id can't be null")
     private long id;
-    @Column
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, targetEntity = User.class)
+
+    @NotNull(message = "participants (betalers) list can't be null")
+    @ManyToMany
+    @ElementCollection(targetClass=User.class)
     private List<User> participants;
     // mensen da moete betalen
+
+    @OneToOne
     @NotNull(message = "payer can't be null")
     private User payer;
     // iemand dat betaald heeft
@@ -26,11 +30,6 @@ public class Payment {
         setParticipants(participants);
         setPayer(payer);
     }
-
-    public long getId() {
-        return this.id;
-    }
-
     public List<User> getParticipants() {
         return participants;
     }
