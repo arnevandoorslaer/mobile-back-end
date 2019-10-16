@@ -24,11 +24,10 @@ public class User {
     @NotEmpty(message = "iban can't be empty")
     private String iban;
 
-    public User() {
-
-    }
+    public User() {}
 
     public User(String lastname, String firstname, String username, String password) {
+        super();
         setLastname(lastname);
         setFirstname(firstname);
         setUsername(username);

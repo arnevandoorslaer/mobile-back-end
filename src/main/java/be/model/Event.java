@@ -4,6 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Event {
@@ -16,7 +17,7 @@ public class Event {
     private String eventName;
     private LocalDate startDate, endDate;
     private String location;
-    private ArrayList<User> participants;
+    private List<User> participants;
     private String extraInfo;
     private String picPath;
 
@@ -28,7 +29,7 @@ public class Event {
         return this.id;
     }
 
-    public ArrayList<User> getParticipants() {
+    public List<User> getParticipants() {
         return participants;
     }
 
@@ -85,6 +86,7 @@ public class Event {
     }
 
     public void setPicPath(String picPath) {
+        if (picPath.contains(".jpg"))
         this.picPath = picPath;
     }
 
