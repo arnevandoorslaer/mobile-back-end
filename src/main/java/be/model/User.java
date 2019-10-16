@@ -24,11 +24,10 @@ public class User {
     @NotEmpty(message = "iban can't be empty")
     private String iban;
 
-    public User() {
-
-    }
+    public User() {}
 
     public User(String lastname, String firstname, String username, String password) {
+        super();
         setLastname(lastname);
         setFirstname(firstname);
         setUsername(username);
@@ -43,6 +42,8 @@ public class User {
     }
 
     private void setLastname(String lastname) {
+        if (lastname == null) throw new ModelException("lastname can't be null");
+        if (lastname.isEmpty()) throw new ModelException("lastname can't be empty");
         this.lastname = lastname;
     }
 
@@ -51,6 +52,8 @@ public class User {
     }
 
     private void setFirstname(String firstname) {
+        if (firstname == null) throw new ModelException("firstname can't be null");
+        if (firstname.isEmpty()) throw new ModelException("firstname can't be empty");
         this.firstname = firstname;
     }
 
@@ -59,6 +62,8 @@ public class User {
     }
 
     private void setUsername(String username) {
+        if (username == null) throw new ModelException("username can't be null");
+        if (username.isEmpty()) throw new ModelException("username can't be empty");
         this.username = username;
     }
 
@@ -67,6 +72,8 @@ public class User {
     }
 
     public void setIBAN(String iban) {
+        if (iban == null) throw new ModelException("iban can't be null");
+        if (iban.isEmpty()) throw new ModelException("iban can't be empty");
         this.iban = iban;
     }
 }

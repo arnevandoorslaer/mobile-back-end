@@ -4,6 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Event {
@@ -16,7 +17,7 @@ public class Event {
     private String eventName;
     private LocalDate startDate, endDate;
     private String location;
-    private ArrayList<User> participants;
+    private List<User> participants;
     private String extraInfo;
     private String picPath;
 
@@ -28,15 +29,17 @@ public class Event {
         return this.id;
     }
 
-    public ArrayList<User> getParticipants() {
+    public List<User> getParticipants() {
         return participants;
     }
 
     public void addParticipant(User user){
+        if (user == null) throw new ModelException("user can't be null");
         participants.add(user);
     }
 
     public void removeParticipant(User user){
+        if (user == null) throw new ModelException("user can't be null");
         participants.remove(user);
     }
 
@@ -45,6 +48,8 @@ public class Event {
     }
 
     public void setEventName(String eventName) {
+        if (eventName == null) throw new ModelException("eventName can't be null");
+        if (eventName.isEmpty()) throw new ModelException("eventName can't be empty");
         this.eventName = eventName;
     }
 
@@ -53,6 +58,7 @@ public class Event {
     }
 
     public void setStartDate(LocalDate startDate) {
+        if (startDate == null) throw new ModelException("startDate can't be null");
         this.startDate = startDate;
     }
 
@@ -61,6 +67,7 @@ public class Event {
     }
 
     public void setEndDate(LocalDate endDate) {
+        if (endDate == null) throw new ModelException("endDate can't be null");
         this.endDate = endDate;
     }
 
@@ -69,6 +76,8 @@ public class Event {
     }
 
     public void setLocation(String location) {
+        if (location == null) throw new ModelException("location can't be null");
+        if (location.isEmpty()) throw new ModelException("location can't be empty");
         this.location = location;
     }
 
@@ -77,6 +86,8 @@ public class Event {
     }
 
     public void setExtraInfo(String extraInfo) {
+        if (extraInfo == null) throw new ModelException("extraInfo can't be null");
+        if (extraInfo.isEmpty()) throw new ModelException("extraInfo can't be empty");
         this.extraInfo = extraInfo;
     }
 
@@ -85,6 +96,11 @@ public class Event {
     }
 
     public void setPicPath(String picPath) {
+        if (picPath == null) throw new ModelException("picPath can't be null");
+        if (picPath.isEmpty()) throw new ModelException("picPath can't be empty");
+        if (!picPath.contains(".jpg") && !picPath.contains(".jpg")) {
+            throw new ModelException("file must be in jpg or png format, flikker");
+        }
         this.picPath = picPath;
     }
 

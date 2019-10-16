@@ -1,12 +1,9 @@
 package be.db;
 
-import be.model.User;
+import be.model.Payment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
-
-
-
+public interface PaymentRepository extends JpaRepository<Payment, Long> {
 }
