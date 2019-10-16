@@ -43,8 +43,6 @@ public class User {
     }
 
     public void setPassword(String password) {
-        if (password == null) throw new ModelException("password can't be null");
-        if (password.isEmpty()) throw new ModelException("password can't be empty");
         this.password = password;
     }
 
@@ -61,8 +59,6 @@ public class User {
     }
 
     private void setLastname(String lastname) {
-        if (lastname == null) throw new ModelException("lastname can't be null");
-        if (lastname.isEmpty()) throw new ModelException("lastname can't be empty");
         this.lastname = lastname;
     }
 
@@ -71,8 +67,6 @@ public class User {
     }
 
     private void setFirstname(String firstname) {
-        if (firstname == null) throw new ModelException("firstname can't be null");
-        if (firstname.isEmpty()) throw new ModelException("firstname can't be empty");
         this.firstname = firstname;
     }
 
@@ -81,8 +75,6 @@ public class User {
     }
 
     private void setUsername(String username) {
-        if (username == null) throw new ModelException("username can't be null");
-        if (username.isEmpty()) throw new ModelException("username can't be empty");
         this.username = username;
     }
 
@@ -91,8 +83,6 @@ public class User {
     }
 
     public void setIBAN(String iban) {
-        if (iban == null) throw new ModelException("iban can't be null");
-        if (iban.isEmpty()) throw new ModelException("iban can't be empty");
         this.iban = iban;
     }
 
@@ -113,27 +103,35 @@ public class User {
     }
 
     public void setPasswordHashed(String password) {
-        if (password.trim().isEmpty()) {
-            throw new ModelException("Geen paswoord gegeven.");
-        }
         try {
             setPassword(hashPassword(password));
         } catch (Exception e) {
-            throw new ModelException(e.getMessage(), e);
+            throw new IllegalArgumentException(e.getMessage(), e);
         }
     }
 
     public boolean isCorrectPassword(String password) {
         if(password.isEmpty()){
-            throw new ModelException("Geen paswoord gegeven.");
+            throw new IllegalArgumentException("Geen paswoord gegeven.");
         }
         String p;
         try {
             p = hashPassword(password);
         } catch (Exception e) {
-            throw new ModelException(e.getMessage(), e);
+            throw new IllegalArgumentException(e.getMessage(), e);
         }
         return getPassword().equals(p);
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", lastname='" + lastname + '\'' +
+                ", firstname='" + firstname + '\'' +
+                ", username='" + username + '\'' +
+                ", iban='" + iban + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
 }
