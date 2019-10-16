@@ -33,12 +33,13 @@ public class User {
 
     public User() {}
 
-    public User(String lastname, String firstname, String username, String password) {
+    public User(String lastname, String firstname, String username, String password,String iban) {
         super();
         setLastname(lastname);
         setFirstname(firstname);
         setUsername(username);
         setPasswordHashed(password);
+        setIBAN(iban);
     }
 
     public void setPassword(String password) {
