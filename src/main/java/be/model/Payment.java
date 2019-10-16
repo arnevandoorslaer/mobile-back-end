@@ -2,7 +2,7 @@ package be.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.List;
+import java.util.ArrayList;
 
 @Entity
 public class Payment {
@@ -14,7 +14,7 @@ public class Payment {
     private long id;
 
     @NotNull(message = "participants (betalers) list can't be null")
-    private List<User> participants;
+    private ArrayList<User> participants;
     // mensen da moete betalen
 
     @NotNull(message = "payer can't be null")
@@ -23,15 +23,15 @@ public class Payment {
 
     public Payment() {}
 
-    public Payment(List<User> participants, User payer) {
+    public Payment(ArrayList<User> participants, User payer) {
         setParticipants(participants);
         setPayer(payer);
     }
-    public List<User> getParticipants() {
+    public ArrayList<User> getParticipants() {
         return participants;
     }
 
-    public void setParticipants(List<User> participants) {
+    public void setParticipants(ArrayList<User> participants) {
         if (participants == null) throw new ModelException("participants can't be null");
         if (participants.isEmpty()) throw new ModelException("participants can't be empty");
         this.participants = participants;

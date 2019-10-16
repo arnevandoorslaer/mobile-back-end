@@ -66,7 +66,7 @@ public class CleverService {
         updateEvent(temp);
     }
 
-    public List<User> getParticipants(long eventId) {
+    public ArrayList<User> getParticipants(long eventId) {
         return eventRepository.getOne(eventId).getParticipants();
     }
 }
