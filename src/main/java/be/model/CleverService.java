@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class CleverService {
@@ -65,7 +66,7 @@ public class CleverService {
         updateEvent(temp);
     }
 
-    public ArrayList<User> getParticipants(long eventId) {
+    public List<User> getParticipants(long eventId) {
         return eventRepository.getOne(eventId).getParticipants();
     }
 }
