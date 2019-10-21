@@ -31,9 +31,10 @@ public class User {
     @NotEmpty(message = "password can't be empty")
     private String password;
 
-    public User() {}
+    public User() {
+    }
 
-    public User(String lastname, String firstname, String username, String password,String iban) {
+    public User(String lastname, String firstname, String username, String password, String iban) {
         super();
         setLastname(lastname);
         setFirstname(firstname);
@@ -111,7 +112,7 @@ public class User {
     }
 
     public boolean isCorrectPassword(String password) {
-        if(password.isEmpty()){
+        if (password.isEmpty()) {
             throw new IllegalArgumentException("Geen paswoord gegeven.");
         }
         String p;
@@ -133,5 +134,12 @@ public class User {
                 ", iban='" + iban + '\'' +
                 ", password='" + password + '\'' +
                 '}';
+    }
+
+    public String getDisplay() {
+        return "  {\n" +
+                "      \"display\":\"" + firstname + " " + lastname + "\",\n" +
+                "      \"value\":\"" + username + "\"\n" +
+                "   }";
     }
 }

@@ -19,12 +19,17 @@ public class CleverService {
 
     }
 
-    public ArrayList<User> getUsers(){
-        return (ArrayList<User>) userRepository.findAll();
+    public String getUsers(){
+        String temp = "[";
+        for (User user:userRepository.findAll()) {
+            temp += user.getDisplay() + ",";
+        }
+        temp = temp.substring(0, temp.length() - 1) + "]";
+        return temp;
     }
 
-    public User getUser(long id) {
-        return userRepository.getOne(id);
+    public String getUser(long id) {
+        return userRepository.getOne(id).getDisplay();
     }
 
     public void addUser(User user){
