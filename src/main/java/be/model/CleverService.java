@@ -3,6 +3,7 @@ package be.model;
 
 
 import be.db.EventRepository;
+import be.db.PaymentRepository;
 import be.db.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,8 @@ public class CleverService {
     private UserRepository userRepository;
     @Autowired
     private EventRepository eventRepository;
+    @Autowired
+    private PaymentRepository paymentRepository;
 
     public CleverService(){
 
@@ -73,5 +76,37 @@ public class CleverService {
 
     public ArrayList<User> getParticipants(long eventId) {
         return eventRepository.getOne(eventId).getParticipants();
+    }
+
+    public ArrayList<Payment> getPaymentsOfEvent(long eventId) {
+        // TODO alles
+        // naam is duidelijk genoeg zeker
+        return null;
+    }
+
+    public double getDebtOfUserFromEvent(long userId, long eventId) {
+        // hoeveel ne user nog moet betalen van een event
+        double total = 0;
+        for (Payment payment : getPaymentsOfEvent(eventId)) {
+            if (payment.getParticipants().contains(getUser(userId))) {
+                total += payment.getAmountPerUser();
+            }
+        }
+        // afronden trust me stackoverflow zei het zo
+        return Math.round(total * 100) / 100.0;
+    }
+
+    public double getProfitOfUserFromEvent(long userId, long eventId) {
+        // TODO fix beter woord ipv profit
+        // sum of amount where user == arthurjoppart
+        double total = 0;
+        for (Payment payment : getPaymentsOfEvent(eventId)) {
+            if (payment.getPayer().getId() == userId) {
+                total += payment.getAmount();
+            }
+        }
+        // afronden trust me stackoverflow zei het zo
+        return Math.round(total * 100) / 100.0;
+
     }
 }

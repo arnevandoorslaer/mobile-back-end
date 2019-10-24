@@ -1,6 +1,7 @@
 package be.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,12 +25,24 @@ public class Payment {
     @NotNull(message = "payer can't be null")
     private User payer;
     // iemand dat betaald heeft
+
+    @DecimalMin(value = "0.01", inclusive = true)
+    private double amount;
+
+    private long eventId;
+
     public Payment() {}
 
     public Payment(ArrayList<User> participants, User payer) {
         setParticipants(participants);
         setPayer(payer);
     }
+
+    public Payment(ArrayList<User> participants, User payer, long eventId) {
+        setParticipants(participants);
+        setPayer(payer);
+    }
+
     public List<User> getParticipants() {
         return participants;
     }
@@ -44,5 +57,17 @@ public class Payment {
 
     public void setPayer(User payer) {
         this.payer = payer;
+    }
+
+    public double getAmount() {
+        return this.amount;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    public double getAmountPerUser() {
+        return this.amount / this.participants.size() + 1; //+1 want payer betaalt ook mee
     }
 }

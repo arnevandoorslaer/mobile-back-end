@@ -1,6 +1,7 @@
 package be.model;
 
 public class ModelException extends RuntimeException {
+    // mooie klasse als zeg ik het zelf
     private static final long serialVersionUID = 1L;
 
     public ModelException() {
