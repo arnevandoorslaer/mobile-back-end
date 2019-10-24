@@ -24,7 +24,6 @@ public class Payment {
     @NotNull(message = "payer can't be null")
     private User payer;
     // iemand dat betaald heeft
-
     public Payment() {}
 
     public Payment(ArrayList<User> participants, User payer) {
@@ -36,8 +35,6 @@ public class Payment {
     }
 
     public void setParticipants(ArrayList<User> participants) {
-        if (participants == null) throw new ModelException("participants can't be null");
-        if (participants.isEmpty()) throw new ModelException("participants can't be empty");
         this.participants = participants;
     }
 
@@ -46,7 +43,6 @@ public class Payment {
     }
 
     public void setPayer(User payer) {
-        if (payer == null) throw new ModelException("payer can't be null");
         this.payer = payer;
     }
 }

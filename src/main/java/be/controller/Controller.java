@@ -1,3 +1,4 @@
+
 package be.controller;
 
 import be.db.DbException;
@@ -50,8 +51,7 @@ public class Controller {
     }
 
     @PostMapping("/user/add")
-    public Object addUser(@Valid User user, BindingResult b, Model m) {
-
+    public Object addUser(@RequestBody @Valid User user, BindingResult b, Model m) {
         List<String> errors = new ArrayList<>();
         if (b.hasErrors()) {
             for (FieldError error : b.getFieldErrors()) {
@@ -73,7 +73,7 @@ public class Controller {
     }
 
     @PostMapping("/event/add")
-    public Object addEvent(@Valid Event event, BindingResult b, Model m) {
+    public Object addEvent(@RequestBody @Valid Event event, BindingResult b, Model m) {
 
         List<String> errors = new ArrayList<>();
         if (b.hasErrors()) {
@@ -95,7 +95,7 @@ public class Controller {
         }
     }
 
-    @GetMapping("/event/{eventid}/participant/")
+    @GetMapping("/event/{eventid}/participant")
     public Object getParticipants(@PathVariable("eventid") long eventId) {
         return service.getParticipants(eventId);
     }
