@@ -1,5 +1,7 @@
 package be.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -14,6 +16,7 @@ public class Event {
     @NotNull(message = "id can't be null")
     private long id;
     private String eventName;
+    @JsonFormat(pattern="dd-MM-yyyy")
     private LocalDate startDate, endDate;
     private String location;
     private ArrayList<User> participants;
