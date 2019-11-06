@@ -27,7 +27,7 @@ public class CleverService {
     public String getUsers(){
         String temp = "[";
         for (User user:userRepository.findAll()) {
-            temp += user.getDisplay() + ",";
+            temp += user.toString() + ",";
         }
         temp = temp.substring(0, temp.length() - 1) + "]";
         return temp;
