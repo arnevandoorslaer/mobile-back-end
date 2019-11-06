@@ -104,4 +104,14 @@ public class Controller {
     public void addParticipant(@PathVariable("eventid") long eventId, @PathVariable("userid") long userId) {
         service.addParticipant(userId, eventId);
     }
+
+    @GetMapping("/event/{eventid}/participant/{userid}/debt")
+    public double getDebtOfUserFromEvent(@PathVariable("eventid") long eventId, @PathVariable("userid") long userId) {
+        return service.getDebtOfUserFromEvent(userId, eventId);
+    }
+
+    @GetMapping("/event/{eventid}/participant/{userid}/due")
+    public double getDueOfUserFromEvent(@PathVariable("eventid") long eventId, @PathVariable("userid") long userId) {
+        return service.getDueOfUserFromEvent(userId, eventId);
+    }
 }

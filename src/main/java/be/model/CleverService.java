@@ -82,13 +82,11 @@ public class CleverService {
     public List<Payment> getPaymentsOfEvent(long eventId) {
 
         List<Payment> result = new ArrayList<>();
-
         for (Payment p : paymentRepository.findAll()) {
             if (p.getEventId() == eventId) {
                 result.add(p);
             }
         }
-
         return result;
     }
 
@@ -104,9 +102,8 @@ public class CleverService {
         return Math.round(total * 100) / 100.0;
     }
 
-    public double getProfitOfUserFromEvent(long userId, long eventId) {
-        // TODO fix beter woord ipv profit
-        // sum of amount where user == arthurjoppart
+    public double getDueOfUserFromEvent(long userId, long eventId) {
+        // sum of amount where user == arthurjoppart hah
         double total = 0;
         for (Payment payment : getPaymentsOfEvent(eventId)) {
             if (payment.getPayer().getId() == userId) {
