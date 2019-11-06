@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Event {
@@ -19,7 +20,7 @@ public class Event {
     @JsonFormat(pattern="dd-MM-yyyy")
     private LocalDate startDate, endDate;
     private String location;
-    private ArrayList<User> participants;
+    private List<Long> participants;
     private String extraInfo;
     private String picPath;
 
@@ -31,16 +32,16 @@ public class Event {
         return this.id;
     }
 
-    public ArrayList<User> getParticipants() {
+    public List<Long> getParticipants() {
         return participants;
     }
 
-    public void addParticipant(User user){
-        participants.add(user);
+    public void addParticipant(long userid){
+        participants.add(userid);
     }
 
-    public void removeParticipant(User user){
-        participants.remove(user);
+    public void removeParticipant(long userid){
+        participants.remove(userid);
     }
 
     public String getEventName() {
