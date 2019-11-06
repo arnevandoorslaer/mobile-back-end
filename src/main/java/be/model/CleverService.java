@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class CleverService {
@@ -74,14 +75,21 @@ public class CleverService {
         updateEvent(temp);
     }
 
-    public ArrayList<User> getParticipants(long eventId) {
+    public List<User> getParticipants(long eventId) {
         return eventRepository.getOne(eventId).getParticipants();
     }
 
-    public ArrayList<Payment> getPaymentsOfEvent(long eventId) {
-        // TODO alles
-        // naam is duidelijk genoeg zeker
-        return null;
+    public List<Payment> getPaymentsOfEvent(long eventId) {
+
+        List<Payment> result = new ArrayList<>();
+
+        for (Payment p : paymentRepository.findAll()) {
+            if (p.getEventId() == eventId) {
+                result.add(p);
+            }
+        }
+
+        return result;
     }
 
     public double getDebtOfUserFromEvent(long userId, long eventId) {
