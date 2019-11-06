@@ -34,7 +34,7 @@ public class CleverService {
     }
 
     public String getUser(long id) {
-        return userRepository.getOne(id).getDisplay();
+        return userRepository.getOne(id).toString();
     }
 
     public void addUser(User user){
