@@ -90,11 +90,11 @@ dependencies {
     compile('mysql:mysql-connector-java:8.0.13')
 
     // needed for sql database
-    //compile group: 'org.postgresql', name: 'postgresql', version: '42.2.5'
-    //compile "javax.xml.bind:jaxb-api:2.3.0"
+    compile group: 'org.postgresql', name: 'postgresql', version: '42.2.5'
+    compile "javax.xml.bind:jaxb-api:2.3.0"
 
     // needed for in-memory database
-    compile("com.h2database:h2")
+    //compile("com.h2database:h2")
 
     //websocket
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
