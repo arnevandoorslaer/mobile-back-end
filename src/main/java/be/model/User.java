@@ -39,12 +39,18 @@ public class User {
         setLastname(lastname);
         setFirstname(firstname);
         setUsername(username);
-        setPasswordHashed(password);
+        setPassword(password);
         setIBAN(iban);
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        try {
+            this.password = hashPassword(password);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 
     public String getPassword() {
@@ -101,14 +107,6 @@ public class User {
         BigInteger digestAsBigInteger = new BigInteger(1, digest);
         //return hashed password
         return digestAsBigInteger.toString(16);
-    }
-
-    public void setPasswordHashed(String password) {
-        try {
-            setPassword(hashPassword(password));
-        } catch (Exception e) {
-            throw new IllegalArgumentException(e.getMessage(), e);
-        }
     }
 
     public boolean isCorrectPassword(String password) {
