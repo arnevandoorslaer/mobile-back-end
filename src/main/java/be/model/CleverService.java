@@ -71,11 +71,11 @@ public class CleverService {
 
     public void addParticipant(long userid,long eventid){
         Event temp = eventRepository.getOne(eventid);
-        temp.addParticipant(userRepository.getOne(userid));
+        temp.addParticipant(userRepository.getOne(userid).getId());
         updateEvent(temp);
     }
 
-    public List<User> getParticipants(long eventId) {
+    public List<Long> getParticipants(long eventId) {
         return eventRepository.getOne(eventId).getParticipants();
     }
 
