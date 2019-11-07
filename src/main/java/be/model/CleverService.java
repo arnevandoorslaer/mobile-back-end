@@ -45,6 +45,10 @@ public class CleverService {
         userRepository.delete(user);
     }
 
+    public void removeUser(long userId){
+        userRepository.delete(this.userRepository.getOne(userId));
+    }
+
     public void updateUser(User user){
         userRepository.save(user);
     }

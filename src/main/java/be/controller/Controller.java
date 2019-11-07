@@ -100,6 +100,11 @@ public class Controller {
         service.removeEvent(eventId);
     }
 
+    @PostMapping("user/del/{userid}")
+    public void delUser(@PathVariable("userid") long userId) {
+        service.removeUser(userId);
+    }
+
     @GetMapping("/event/{eventid}/participants")
     public Object getParticipants(@PathVariable("eventid") long eventId) {
         return service.getParticipants(eventId);
