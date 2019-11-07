@@ -6,7 +6,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 public class Event {
@@ -20,7 +19,7 @@ public class Event {
     @JsonFormat(pattern="dd-MM-yyyy")
     private LocalDate startDate, endDate;
     private String location;
-    private List<Long> participants;
+    private ArrayList<Long> participants;
     private String extraInfo;
     private String picPath;
 
@@ -32,7 +31,7 @@ public class Event {
         return this.id;
     }
 
-    public List<Long> getParticipants() {
+    public ArrayList<Long> getParticipants() {
         return participants;
     }
 
