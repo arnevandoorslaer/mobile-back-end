@@ -95,7 +95,7 @@ public class Controller {
         }
     }
 
-    @GetMapping("/event/{eventid}/participant")
+    @GetMapping("/event/{eventid}/participants")
     public Object getParticipants(@PathVariable("eventid") long eventId) {
         return service.getParticipants(eventId);
     }
