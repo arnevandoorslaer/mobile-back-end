@@ -65,14 +65,21 @@ public class CleverService {
         eventRepository.delete(event);
     }
 
+    public void removeEvent(long eventid) {
+        this.eventRepository.delete(this.eventRepository.getOne(eventid));
+    }
+
     public void updateEvent(Event event){
         eventRepository.save(event);
     }
 
     public void addParticipant(long userid,long eventid){
-        Event temp = eventRepository.getOne(eventid);
-        temp.addParticipant(userRepository.getOne(userid).getId());
-        updateEvent(temp);
+        Event event = eventRepository.getOne(eventid);
+        if (event.getParticipants().contains(userid)) {
+            throw new ModelException("User is already in event");
+        }
+        event.addParticipant(userRepository.getOne(userid).getId());
+        updateEvent(event);
     }
 
     public List<Long> getParticipants(long eventId) {

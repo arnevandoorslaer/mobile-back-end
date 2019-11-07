@@ -95,6 +95,11 @@ public class Controller {
         }
     }
 
+    @PostMapping("event/del/{eventid}")
+    public void delEvent(@PathVariable("eventid") long eventId) {
+        service.removeEvent(eventId);
+    }
+
     @GetMapping("/event/{eventid}/participants")
     public Object getParticipants(@PathVariable("eventid") long eventId) {
         return service.getParticipants(eventId);
