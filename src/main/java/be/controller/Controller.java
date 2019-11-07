@@ -95,12 +95,12 @@ public class Controller {
         }
     }
 
-    @PostMapping("event/del/{eventid}")
+    @PostMapping("/event/del/{eventid}")
     public void delEvent(@PathVariable("eventid") long eventId) {
         service.removeEvent(eventId);
     }
 
-    @PostMapping("user/del/{userid}")
+    @PostMapping("/user/del/{userid}")
     public void delUser(@PathVariable("userid") long userId) {
         service.removeUser(userId);
     }
