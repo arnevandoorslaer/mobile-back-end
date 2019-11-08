@@ -74,6 +74,28 @@ public class Controller {
         }
     }
 
+    @PostMapping("/user/update")
+    public Object updateUser(@RequestBody @Valid User user, BindingResult b, Model m) {
+        List<String> errors = new ArrayList<>();
+        if (b.hasErrors()) {
+            for (FieldError error : b.getFieldErrors()) {
+                errors.add(error.toString());
+            }
+            m.addAttribute("errors", errors);
+            return errors;
+        }
+        else {
+            try {
+                service.updateUser(user);
+            } catch (DbException e) {
+                errors.add(e.getMessage());
+                m.addAttribute("errors", errors);
+                return errors;
+            }
+            return service.getUser(user.getId());
+        }
+    }
+
     @PostMapping("/event/add")
     @ResponseStatus(HttpStatus.CREATED)
     public Object addEvent(@RequestBody @Valid Event event, BindingResult b, Model m) {
@@ -89,6 +111,30 @@ public class Controller {
         else {
             try {
                 service.addEvent(event);
+            } catch (DbException e) {
+                errors.add(e.getMessage());
+                m.addAttribute("errors", errors);
+                return errors;
+            }
+            return service.getEvent(event.getId());
+        }
+    }
+
+    @PostMapping("/event/update")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Object updateEvent( @RequestBody @Valid Event event, BindingResult b, Model m) {
+
+        List<String> errors = new ArrayList<>();
+        if (b.hasErrors()) {
+            for (FieldError error : b.getFieldErrors()) {
+                errors.add(error.toString());
+            }
+            m.addAttribute("errors", errors);
+            return errors;
+        }
+        else {
+            try {
+                service.updateEvent(event);
             } catch (DbException e) {
                 errors.add(e.getMessage());
                 m.addAttribute("errors", errors);

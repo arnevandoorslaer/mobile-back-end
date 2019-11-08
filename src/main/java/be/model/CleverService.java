@@ -50,6 +50,8 @@ public class CleverService {
     }
 
     public void updateUser(User user){
+        User oldUser = userRepository.findByUsername(user.getUsername());
+        user.setId(oldUser.getId());
         userRepository.save(user);
     }
 
@@ -74,6 +76,8 @@ public class CleverService {
     }
 
     public void updateEvent(Event event){
+        Event oldEvent = eventRepository.findByEventName(event.getEventName());
+        event.setId(oldEvent.getId());
         eventRepository.save(event);
     }
 
