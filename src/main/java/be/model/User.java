@@ -1,5 +1,8 @@
 package be.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -8,6 +11,7 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 public class User {
     @Id
@@ -122,18 +126,22 @@ public class User {
         return getPassword().equals(p);
     }
 
+
+    /*
     @Override
     public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", lastname='" + lastname + '\'' +
-                ", firstname='" + firstname + '\'' +
-                ", username='" + username + '\'' +
-                ", iban='" + iban + '\'' +
-                ", password='" + password + '\'' +
+        return "{" +
+                "\"id\":\"" + id + "\"" +
+                ", \"lastname\":\"" + lastname + "\"" +
+                ", \"firstname\":\"" + firstname + "\"" +
+                ", \"username\":\"" + username + "\"" +
+                ", \"iban\":\"" + iban + "\"" +
+                ", \"password\":\"" + password + "\"" +
                 '}';
     }
 
+     */
+    @JsonIgnore
     public String getDisplay() {
         return "  {\n" +
                 "      \"display\":\"" + firstname + " " + lastname + "\",\n" +
