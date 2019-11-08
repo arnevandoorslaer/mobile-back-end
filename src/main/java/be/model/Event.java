@@ -31,6 +31,10 @@ public class Event {
         return this.id;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public ArrayList<Long> getParticipants() {
         return participants;
     }
