@@ -89,6 +89,26 @@ public class CleverService {
         return eventRepository.getOne(eventId).getParticipants();
     }
 
+    public double getTotalCostOfEvent(long eventId) {
+        double result = 0.0;
+        for (Payment p : getPaymentsOfEvent(eventId)) {
+            result += p.getAmount();
+        }
+        return result;
+    }
+
+    public Payment getPayment(long paymentId) {
+        return paymentRepository.getOne(paymentId);
+    }
+
+    public void removePayment(long paymentId) {
+        paymentRepository.delete(getPayment(paymentId));
+    }
+
+    public void addPayment(Payment payment) {
+        paymentRepository.save(payment);
+    }
+
     public List<Payment> getPaymentsOfEvent(long eventId) {
 
         List<Payment> result = new ArrayList<>();
