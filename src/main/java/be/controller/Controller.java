@@ -199,4 +199,24 @@ public class Controller {
             return service.getPayment(payment.getId());
         }
     }
+
+    @GetMapping("/payment/get/{paymentid}")
+    public Object getPayment(@PathVariable("paymentid") long paymentid) {
+        return service.getPayment(paymentid);
+    }
+
+    @GetMapping("/event/{eventid}/payments")
+    public List<Payment> getPaymentsFromEvent(@PathVariable("eventid") long eventid) {
+        return service.getPaymentsOfEvent(eventid);
+    }
+
+    @GetMapping("/event/{eventid}/debt/{userid}")
+    public double getDebtOfUser(@PathVariable("eventid") long eventid, @PathVariable("userid") long userid) {
+        return service.getDebtOfUserFromEvent(userid, eventid);
+    }
+
+    @GetMapping("/event/{eventid}/profit/{userid}")
+    public double getProfitOfUser(@PathVariable("eventid") long eventid, @PathVariable("userid") long userid) {
+        return service.getDueOfUserFromEvent(userid, eventid);
+    }
 }
