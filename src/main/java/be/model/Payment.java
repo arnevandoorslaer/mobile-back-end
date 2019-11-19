@@ -2,6 +2,7 @@ package be.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,10 @@ public class Payment {
     private double amount;
 
     private long eventId;
+
+    @NotNull(message = "message can't be null")
+    @NotEmpty(message = "message can't be empty")
+    private String message;
 
     public Payment() {}
 
@@ -77,5 +82,13 @@ public class Payment {
 
     public void setEventId(long eventId) {
         this.eventId = eventId;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }
