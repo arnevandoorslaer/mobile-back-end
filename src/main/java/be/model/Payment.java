@@ -19,7 +19,7 @@ public class Payment {
     @NotNull(message = "participants (betalers) list can't be null")
     @ManyToMany
     @ElementCollection(targetClass=User.class)
-    private List<User> participants;
+    private List<Long> participants;
     // mensen da moete betalen
 
     @OneToOne
@@ -38,21 +38,21 @@ public class Payment {
 
     public Payment() {}
 
-    public Payment(ArrayList<User> participants, User payer) {
+    public Payment(ArrayList<Long> participants, User payer) {
         setParticipants(participants);
         setPayer(payer);
     }
 
-    public Payment(ArrayList<User> participants, User payer, long eventId) {
+    public Payment(ArrayList<Long> participants, User payer, long eventId) {
         setParticipants(participants);
         setPayer(payer);
     }
 
-    public List<User> getParticipants() {
+    public List<Long> getParticipants() {
         return participants;
     }
 
-    public void setParticipants(ArrayList<User> participants) {
+    public void setParticipants(ArrayList<Long> participants) {
         this.participants = participants;
     }
 
@@ -90,5 +90,13 @@ public class Payment {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }

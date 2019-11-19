@@ -4,6 +4,7 @@ package be.controller;
 import be.db.DbException;
 import be.model.CleverService;
 import be.model.Event;
+import be.model.Payment;
 import be.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -173,5 +174,29 @@ public class Controller {
     @GetMapping("/event/{eventid}/participant/{userid}/due")
     public double getDueOfUserFromEvent(@PathVariable("eventid") long eventId, @PathVariable("userid") long userId) {
         return service.getDueOfUserFromEvent(userId, eventId);
+    }
+
+    @PostMapping("/payment/add")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Object addPayment(@RequestBody @Valid Payment payment, BindingResult b, Model m) {
+
+        List<String> errors = new ArrayList<>();
+        if (b.hasErrors()) {
+            for (FieldError error : b.getFieldErrors()) {
+                errors.add(error.toString());
+            }
+            m.addAttribute("errors", errors);
+            return errors;
+        }
+        else {
+            try {
+                service.addPayment(payment);
+            } catch (DbException e) {
+                errors.add(e.getMessage());
+                m.addAttribute("errors", errors);
+                return errors;
+            }
+            return service.getPayment(payment.getId());
+        }
     }
 }
