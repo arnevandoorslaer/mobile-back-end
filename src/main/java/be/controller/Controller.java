@@ -156,8 +156,12 @@ public class Controller {
     }
 
     @GetMapping("/event/{eventid}/participants")
-    public Object getParticipants(@PathVariable("eventid") long eventId) {
-        return service.getParticipants(eventId);
+    public List<User> getParticipants(@PathVariable("eventid") long eventId) {
+        List<User> result = new ArrayList<>();
+        for (long u : service.getEvent(eventId).getParticipants()) {
+            result.add(service.getUser(u));
+        }
+        return result;
     }
 
     @PostMapping("/event/{eventid}/participants/add/{userid}")
