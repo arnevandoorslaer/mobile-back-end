@@ -46,7 +46,7 @@ public class Controller {
     public Object getUser(@PathVariable("id") long id) {
         return service.getUser(id);
     }
-    
+
 
     @GetMapping("/event/get/{id}")
     public Object getEvent(@PathVariable("id") long id) {
@@ -96,6 +96,11 @@ public class Controller {
             }
             return service.getUser(user.getId());
         }
+    }
+
+    @PostMapping("/user/{userid}/login")
+    public int login(@PathVariable("userid") long userid, @RequestBody String hashedPassword) {
+        return service.login(userid, hashedPassword);
     }
 
     @PostMapping("/event/add")
@@ -208,6 +213,11 @@ public class Controller {
     @GetMapping("/payment/get/{paymentid}")
     public Object getPayment(@PathVariable("paymentid") long paymentid) {
         return service.getPayment(paymentid);
+    }
+
+    @GetMapping("/event/{eventid}/cost")
+    public double getCostOfEvent(@PathVariable("eventid") long eventid) {
+        return service.getTotalCostOfEvent(eventid);
     }
 
     @GetMapping("/event/{eventid}/payments")

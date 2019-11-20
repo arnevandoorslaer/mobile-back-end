@@ -5,6 +5,7 @@ package be.model;
 import be.db.EventRepository;
 import be.db.PaymentRepository;
 import be.db.UserRepository;
+import ch.qos.logback.core.encoder.EchoEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -143,5 +144,21 @@ public class CleverService {
         // afronden trust me stackoverflow zei het zo
         return Math.round(total * 100) / 100.0;
 
+    }
+
+    public int login(long userid, String hashedPassword) {
+        // Bestaat user?
+        try {
+            userRepository.getOne(userid);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        }
+        // Juist of fout ww
+        if (userRepository.getOne(userid).isCorrectPassword(hashedPassword)) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 }

@@ -118,16 +118,7 @@ public class User {
     }
 
     public boolean isCorrectPassword(String password) {
-        if (password.isEmpty()) {
-            throw new IllegalArgumentException("Geen paswoord gegeven.");
-        }
-        String p;
-        try {
-            p = hashPassword(password);
-        } catch (Exception e) {
-            throw new IllegalArgumentException(e.getMessage(), e);
-        }
-        return getPassword().equals(p);
+        return password.equals(this.password);
     }
 
 
