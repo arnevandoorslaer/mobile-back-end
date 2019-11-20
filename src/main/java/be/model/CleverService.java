@@ -155,7 +155,13 @@ public class CleverService {
 
     }
 
-    public int login(long userid, String hashedPassword) {
+    public int login(String username, String hashedPassword) {
+
+        //TODO deze find by username returnt null????
+        System.out.println(userRepository.findByUsername(username));
+
+        long userid = userRepository.findByUsername(username).getId();
+
         // Bestaat user?
         try {
             userRepository.getOne(userid);

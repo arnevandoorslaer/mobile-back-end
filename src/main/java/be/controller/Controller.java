@@ -6,6 +6,8 @@ import be.model.CleverService;
 import be.model.Event;
 import be.model.Payment;
 import be.model.User;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
@@ -14,6 +16,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,9 +101,24 @@ public class Controller {
         }
     }
 
-    @PostMapping("/user/{userid}/login")
-    public int login(@PathVariable("userid") long userid, @RequestBody String hashedPassword) {
-        return service.login(userid, hashedPassword);
+    @PostMapping("/user/login")
+    public int login(@RequestBody String json) {
+
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode result = null;
+        try {
+            result = mapper.readTree(json);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(result);
+
+        String username = result.findValue("username").toString();
+        System.out.println(username);
+        String hashedPassword = result.findValue("password").toString();
+        System.out.println(hashedPassword);
+        return service.login(username, hashedPassword);
     }
 
     @PostMapping("/event/add")
