@@ -46,6 +46,7 @@ public class Controller {
     public Object getUser(@PathVariable("id") long id) {
         return service.getUser(id);
     }
+    
 
     @GetMapping("/event/get/{id}")
     public Object getEvent(@PathVariable("id") long id) {
