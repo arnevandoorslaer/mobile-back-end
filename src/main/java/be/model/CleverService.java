@@ -7,6 +7,7 @@ import be.db.PaymentRepository;
 import be.db.UserRepository;
 import ch.qos.logback.core.encoder.EchoEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ public class CleverService {
     }
 
     public List<User> getUsers(){
-        return userRepository.findAll();
+        return userRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 
     public User getUser(long id) {
@@ -56,7 +57,7 @@ public class CleverService {
     }
 
     public ArrayList<Event> getEvents(){
-        return (ArrayList<Event>) eventRepository.findAll();
+        return (ArrayList<Event>) eventRepository.findAll(Sort.by(Sort.Direction.ASC, "startDate"));
     }
 
     public void addEvent(Event event){
@@ -96,6 +97,10 @@ public class CleverService {
             result += p.getAmount();
         }
         return result;
+    }
+
+    public List<Payment> getPayments() {
+        return paymentRepository.findAll();
     }
 
     public Payment getPayment(long paymentId) {

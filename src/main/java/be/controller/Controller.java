@@ -186,6 +186,11 @@ public class Controller {
         return service.getDueOfUserFromEvent(userId, eventId);
     }
 
+    @GetMapping("/payments")
+    public List<Payment> getPayments() {
+        return service.getPayments();
+    }
+
     @PostMapping("/payment/add")
     @ResponseStatus(HttpStatus.CREATED)
     public Object addPayment(@RequestBody @Valid Payment payment, BindingResult b, Model m) {
