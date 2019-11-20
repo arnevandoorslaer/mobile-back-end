@@ -17,13 +17,10 @@ public class Payment {
     private long id;
 
     @NotNull(message = "participants (betalers) list can't be null")
-    @ManyToMany
-    @ElementCollection(targetClass=User.class)
+    @ElementCollection(targetClass=Long.class)
     private List<Long> participants;
     // mensen da moete betalen
 
-    @OneToOne
-    @NotNull(message = "payer can't be null")
     private long payer;
     // iemand dat betaald heeft
 
