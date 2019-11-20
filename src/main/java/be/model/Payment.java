@@ -24,7 +24,7 @@ public class Payment {
 
     @OneToOne
     @NotNull(message = "payer can't be null")
-    private User payer;
+    private long payer;
     // iemand dat betaald heeft
 
     @DecimalMin(value = "0.01", inclusive = true)
@@ -38,12 +38,12 @@ public class Payment {
 
     public Payment() {}
 
-    public Payment(ArrayList<Long> participants, User payer) {
+    public Payment(ArrayList<Long> participants, long payer) {
         setParticipants(participants);
         setPayer(payer);
     }
 
-    public Payment(ArrayList<Long> participants, User payer, long eventId) {
+    public Payment(ArrayList<Long> participants, long payer, long eventId) {
         setParticipants(participants);
         setPayer(payer);
     }
@@ -56,11 +56,11 @@ public class Payment {
         this.participants = participants;
     }
 
-    public User getPayer() {
+    public long getPayer() {
         return payer;
     }
 
-    public void setPayer(User payer) {
+    public void setPayer(long payer) {
         this.payer = payer;
     }
 
