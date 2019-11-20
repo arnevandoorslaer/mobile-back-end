@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 @Entity
@@ -16,8 +17,8 @@ public class Event {
     @NotNull(message = "id can't be null")
     private long id;
     private String eventName;
-    @JsonFormat(pattern="dd-MM-yyyy")
-    private LocalDate startDate, endDate;
+    @JsonFormat(pattern="dd-MM-yyyy HH:mm:ss")
+    private LocalDateTime startDate, endDate;
     private String location;
     private ArrayList<Long> participants;
     private String extraInfo;
@@ -55,19 +56,19 @@ public class Event {
         this.eventName = eventName;
     }
 
-    public LocalDate getStartDate() {
+    public LocalDateTime getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDate startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 
-    public LocalDate getEndDate() {
+    public LocalDateTime getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(LocalDate endDate) {
+    public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
 
