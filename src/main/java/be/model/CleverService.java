@@ -46,6 +46,10 @@ public class CleverService {
         userRepository.delete(this.userRepository.getOne(userId));
     }
 
+    public String getUsernameOfUser(long userid) {
+        return userRepository.getOne(userid).getUsername();
+    }
+
     public void updateUser(User user){
         User oldUser = userRepository.findByUsername(user.getUsername());
         user.setId(oldUser.getId());
