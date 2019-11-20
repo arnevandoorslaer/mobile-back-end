@@ -142,7 +142,7 @@ public class CleverService {
         // sum of amount where user == arthurjoppart hah
         double total = 0;
         for (Payment payment : getPaymentsOfEvent(eventId)) {
-            if (payment.getPayer().getId() == userId) {
+            if (payment.getPayer() == userId) {
                 total += payment.getAmount();
             }
         }
