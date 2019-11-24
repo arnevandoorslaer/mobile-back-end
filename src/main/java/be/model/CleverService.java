@@ -5,7 +5,6 @@ package be.model;
 import be.db.EventRepository;
 import be.db.PaymentRepository;
 import be.db.UserRepository;
-import ch.qos.logback.core.encoder.EchoEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -156,12 +155,7 @@ public class CleverService {
     }
 
     public int login(String username, String hashedPassword) {
-
-        //TODO deze find by username returnt null????
-        System.out.println(userRepository.findByUsername(username));
-
         long userid = userRepository.findByUsername(username).getId();
-
         // Bestaat user?
         try {
             userRepository.getOne(userid);

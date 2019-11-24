@@ -103,7 +103,6 @@ public class Controller {
 
     @PostMapping("/user/login")
     public int login(@RequestBody String json) {
-
         ObjectMapper mapper = new ObjectMapper();
         JsonNode result = null;
         try {
@@ -111,13 +110,8 @@ public class Controller {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        System.out.println(result);
-
-        String username = result.findValue("username").toString();
-        System.out.println(username);
-        String hashedPassword = result.findValue("password").toString();
-        System.out.println(hashedPassword);
+        String username = result.findValue("username").toString().replace("\"","");
+        String hashedPassword = result.findValue("password").toString().replace("\"","");
         return service.login(username, hashedPassword);
     }
 
