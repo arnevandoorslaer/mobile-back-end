@@ -48,13 +48,7 @@ public class User {
     }
 
     public void setPassword(String password) {
-        try {
-            this.password = hashPassword(password);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        this.password = password;
     }
 
     public String getPassword() {
@@ -99,22 +93,6 @@ public class User {
 
     public void setIBAN(String iban) {
         this.iban = iban;
-    }
-
-    private String hashPassword(String password) throws NoSuchAlgorithmException, UnsupportedEncodingException {
-        //create MessageDigest
-        MessageDigest crypt = MessageDigest.getInstance("SHA-512");
-        //reset
-        crypt.reset();
-        //update
-        byte[] passwordBytes = password.getBytes("UTF-8");
-        crypt.update(passwordBytes);
-        //digest
-        byte[] digest = crypt.digest();
-        //convert to String
-        BigInteger digestAsBigInteger = new BigInteger(1, digest);
-        //return hashed password
-        return digestAsBigInteger.toString(16);
     }
 
     public boolean isCorrectPassword(String password) {
