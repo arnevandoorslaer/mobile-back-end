@@ -155,9 +155,10 @@ public class CleverService {
     }
 
     public int login(String username, String hashedPassword) {
-        long userid = userRepository.findByUsername(username).getId();
         // Bestaat user?
+        long userid = 0;
         try {
+            userid = userRepository.findByUsername(username).getId();
             userRepository.getOne(userid);
         } catch (Exception e) {
             e.printStackTrace();
