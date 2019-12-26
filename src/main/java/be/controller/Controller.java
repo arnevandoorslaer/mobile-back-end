@@ -188,6 +188,12 @@ public class Controller {
         service.addParticipant(userId, eventId);
     }
 
+    @PostMapping("/event/{eventid}/participants/del/{userid}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void delParticipant(@PathVariable("eventid") long eventId, @PathVariable("userid") long userId) {
+        service.removeParticipant(userId, eventId);
+    }
+
     @GetMapping("/event/{eventid}/participant/{userid}/debt")
     public double getDebtOfUserFromEvent(@PathVariable("eventid") long eventId, @PathVariable("userid") long userId) {
         return service.getDebtOfUserFromEvent(userId, eventId);

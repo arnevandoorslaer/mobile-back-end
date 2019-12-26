@@ -90,6 +90,12 @@ public class CleverService {
         updateEvent(event);
     }
 
+    public void removeParticipant(long userid, long eventid) {
+        Event event = eventRepository.getOne(eventid);
+        event.removeParticipant(userRepository.getOne(userid).getId());
+        updateEvent(event);
+    }
+
     public List<Long> getParticipants(long eventId) {
         return eventRepository.getOne(eventId).getParticipants();
     }
@@ -171,4 +177,6 @@ public class CleverService {
             return 0;
         }
     }
+
+
 }
