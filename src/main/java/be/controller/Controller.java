@@ -233,6 +233,11 @@ public class Controller {
         }
     }
 
+    @PostMapping("/payment/del/{paymentid}")    @ResponseStatus(HttpStatus.CREATED)
+    public void delPayment(@PathVariable("paymentid") long paymentid) {
+        service.removePayment(paymentid);
+    }
+
     @GetMapping("/payment/get/{paymentid}")
     public Object getPayment(@PathVariable("paymentid") long paymentid) {
         return service.getPayment(paymentid);
