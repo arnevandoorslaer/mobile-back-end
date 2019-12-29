@@ -38,7 +38,7 @@ public class User {
         super();
         setLastname(lastname);
         setFirstname(firstname);
-        setUsername(username.toLowerCase());
+        setUsername(username.trim().toLowerCase());
         setPassword(password);
         setIBAN(iban);
     }

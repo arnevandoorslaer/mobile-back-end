@@ -110,7 +110,7 @@ public class Controller {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        String username = result.findValue("username").toString().replace("\"","");
+        String username = result.findValue("username").toString().replace("\"","").trim().toLowerCase();
         String hashedPassword = result.findValue("password").toString().replace("\"","");
         return service.login(username, hashedPassword);
     }
