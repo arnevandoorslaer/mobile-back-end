@@ -6,10 +6,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.io.UnsupportedEncodingException;
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
@@ -42,7 +38,7 @@ public class User {
         super();
         setLastname(lastname);
         setFirstname(firstname);
-        setUsername(username);
+        setUsername(username.toLowerCase());
         setPassword(password);
         setIBAN(iban);
     }

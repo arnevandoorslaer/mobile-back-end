@@ -164,7 +164,7 @@ public class CleverService {
         // Bestaat user?
         long userid = 0;
         try {
-            userid = userRepository.findByUsername(username.trim()).getId();
+            userid = userRepository.findByUsername(username.trim().toLowerCase()).getId();
             userRepository.getOne(userid);
         } catch (Exception e) {
             e.printStackTrace();
