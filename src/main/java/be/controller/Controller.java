@@ -277,10 +277,5 @@ public class Controller {
     public List<Object> getProfileUserData(@PathVariable("username") String username) {
         return service.getProfileUserData(username);
     }
-
-    @GetMapping("test1/{userid1}/{userid2}")
-    public Object getProfileUserData1(@PathVariable("userid1") long userid1, @PathVariable("userid2") long userid2) {
-        return service.getDueOfUserFromOtherUser(userid1,userid2);
-    }
 }
 

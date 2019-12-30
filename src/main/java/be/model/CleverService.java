@@ -179,11 +179,13 @@ public class CleverService {
     public List<Object> getProfileUserData(String username) {
         JSONArray output = new JSONArray();
         long userid = userRepository.findByUsername(username).getId();
-        for (Event event : getEventsFromUser(username)) {
+        for (User user : getUsers()) {
+            double due = getDueOfUserFromOtherUser(userid, user.getId());
+            double debt = getDueOfUserFromOtherUser(user.getId(), userid);
             JSONObject object = new JSONObject();
-            object.put("event", event.getEventName());
-            object.put("debt", getDebtOfUserFromEvent(userid, event.getId()));
-            object.put("due", getDueOfUserFromEvent(userid, event.getId()));
+            object.put("name", user.getUsername());
+            object.put("debt", debt);
+            object.put("due", due);
             output.put(object);
         }
         System.out.println(output.toString());
@@ -233,18 +235,13 @@ public class CleverService {
     }
 
     public double getDueOfUserFromOtherUser(long userId, long otheruserId) {
-        // sum of amount where user == arthurjoppart hah
         double total = 0;
         for (Payment payment : getPaymentsFromUser(userId)) {
-            System.out.println(payment.getMessage());
-            System.out.println(payment.getAmountPerUser());
             if (payment.getParticipants().contains(otheruserId)) {
                 total += payment.getAmountPerUser();
                 break;
             }
         }
-        // afronden trust me stackoverflow zei het zo
         return Math.round(total * 100) / 100.0;
-
     }
 }
