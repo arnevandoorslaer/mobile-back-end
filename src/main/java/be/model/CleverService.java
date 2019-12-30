@@ -5,6 +5,8 @@ package be.model;
 import be.db.EventRepository;
 import be.db.PaymentRepository;
 import be.db.UserRepository;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -158,6 +160,20 @@ public class CleverService {
         // afronden trust me stackoverflow zei het zo
         return Math.round(total * 100) / 100.0;
 
+    }
+
+    public List<Object> getProfileData(String username) {
+        JSONArray output = new JSONArray();
+        long userid = userRepository.findByUsername(username).getId();
+        for (Event event : getEventsFromUser(username)) {
+            JSONObject object = new JSONObject();
+            object.put("event", event.getEventName());
+            object.put("debt", getDebtOfUserFromEvent(userid, event.getId()));
+            object.put("due", getDueOfUserFromEvent(userid, event.getId()));
+            output.put(object);
+        }
+        System.out.println(output.toString());
+        return output.toList();
     }
 
     public int login(String username, String hashedPassword) {

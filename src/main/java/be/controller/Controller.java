@@ -267,4 +267,9 @@ public class Controller {
     public List<Event> getEventsOfUsers(@PathVariable("username") String username) {
         return service.getEventsFromUser(username.toLowerCase().trim());
     }
+
+    @GetMapping("user/data/{username}")
+    public List<Object> getProfileData(@PathVariable("username") String username) {
+        return service.getProfileData(username);
+    }
 }
