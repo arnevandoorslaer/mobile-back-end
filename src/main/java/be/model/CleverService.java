@@ -182,11 +182,15 @@ public class CleverService {
         for (User user : getUsers()) {
             double due = getDueOfUserFromOtherUser(userid, user.getId());
             double debt = getDueOfUserFromOtherUser(user.getId(), userid);
-            JSONObject object = new JSONObject();
-            object.put("name", user.getUsername());
-            object.put("debt", debt);
-            object.put("due", due);
-            output.put(object);
+
+            if(debt != 0 && due != 0){
+                JSONObject object = new JSONObject();
+                object.put("name", user.getUsername());
+                object.put("debt", debt);
+                object.put("due", due);
+                output.put(object);
+            }
+
         }
         System.out.println(output.toString());
         return output.toList();
