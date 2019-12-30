@@ -166,11 +166,16 @@ public class CleverService {
         JSONArray output = new JSONArray();
         long userid = userRepository.findByUsername(username).getId();
         for (Event event : getEventsFromUser(username)) {
-            JSONObject object = new JSONObject();
-            object.put("name", event.getEventName());
-            object.put("debt", getDebtOfUserFromEvent(userid, event.getId()));
-            object.put("due", getDueOfUserFromEvent(userid, event.getId()));
-            output.put(object);
+            double due = getDebtOfUserFromEvent(userid, event.getId());
+            double debt = getDueOfUserFromEvent(userid, event.getId());
+
+            if (debt != 0 && due != 0) {
+                JSONObject object = new JSONObject();
+                object.put("name", event.getEventName());
+                object.put("debt", debt);
+                object.put("due", due);
+                output.put(object);
+            }
         }
         System.out.println(output.toString());
         return output.toList();
@@ -183,7 +188,7 @@ public class CleverService {
             double due = getDueOfUserFromOtherUser(userid, user.getId());
             double debt = getDueOfUserFromOtherUser(user.getId(), userid);
 
-            if(debt != 0 && due != 0){
+            if (debt != 0 && due != 0) {
                 JSONObject object = new JSONObject();
                 object.put("name", user.getUsername());
                 object.put("debt", debt);
