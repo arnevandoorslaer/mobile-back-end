@@ -162,7 +162,7 @@ public class CleverService {
 
     }
 
-    public List<Object> getProfileData(String username) {
+    public List<Object> getProfileEventData(String username) {
         JSONArray output = new JSONArray();
         long userid = userRepository.findByUsername(username).getId();
         for (Event event : getEventsFromUser(username)) {
@@ -174,6 +174,10 @@ public class CleverService {
         }
         System.out.println(output.toString());
         return output.toList();
+    }
+
+    public List<Object> getProfileUserData(String username) {
+        return new ArrayList<Object>();
     }
 
     public int login(String username, String hashedPassword) {
@@ -206,5 +210,31 @@ public class CleverService {
             }
         }
         return events;
+    }
+
+    public List<Payment> getPaymentsFromUser(long userid) {
+        ArrayList<Payment> payments = new ArrayList<>();
+        for (Payment payment : paymentRepository.findAll()) {
+            if (payment.getPayer() == userid) {
+                payments.add(payment);
+            }
+        }
+        return payments;
+    }
+
+    public double getDueOfUserFromOtherUser(long userId, long otheruserId) {
+        // sum of amount where user == arthurjoppart hah
+        double total = 0;
+        for (Payment payment : getPaymentsFromUser(userId)) {
+            System.out.println(payment.getMessage());
+            System.out.println(payment.getAmountPerUser());
+            if (payment.getParticipants().contains(otheruserId)) {
+                total += payment.getAmountPerUser();
+                break;
+            }
+        }
+        // afronden trust me stackoverflow zei het zo
+        return Math.round(total * 100) / 100.0;
+
     }
 }

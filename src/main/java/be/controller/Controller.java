@@ -268,8 +268,19 @@ public class Controller {
         return service.getEventsFromUser(username.toLowerCase().trim());
     }
 
-    @GetMapping("user/data/{username}")
-    public List<Object> getProfileData(@PathVariable("username") String username) {
-        return service.getProfileData(username);
+    @GetMapping("user/dataperevent/{username}")
+    public List<Object> getProfileEventData(@PathVariable("username") String username) {
+        return service.getProfileEventData(username);
+    }
+
+    @GetMapping("user/dataperuser/{username}")
+    public List<Object> getProfileUserData(@PathVariable("username") String username) {
+        return service.getProfileUserData(username);
+    }
+
+    @GetMapping("test1/{userid1}/{userid2}")
+    public Object getProfileUserData1(@PathVariable("userid1") long userid1, @PathVariable("userid2") long userid2) {
+        return service.getDueOfUserFromOtherUser(userid1,userid2);
     }
 }
+
