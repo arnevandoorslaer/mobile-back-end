@@ -70,7 +70,7 @@ public class Payment {
     }
 
     public double getAmountPerUser() {
-        return this.amount / (this.participants.size() + 1); //+1 want payer betaalt ook mee
+        return this.amount / this.participants.size(); //+1 want payer betaalt ook mee
     }
 
     public long getEventId() {
