@@ -169,7 +169,7 @@ public class CleverService {
             double due = getDebtOfUserFromEvent(userid, event.getId());
             double debt = getDueOfUserFromEvent(userid, event.getId());
 
-            if (debt != 0 && due != 0) {
+            if (!(debt == 0 && due == 0)) {
                 JSONObject object = new JSONObject();
                 object.put("name", event.getEventName());
                 object.put("debt", debt);
@@ -188,7 +188,7 @@ public class CleverService {
             double due = getDueOfUserFromOtherUser(userid, user.getId());
             double debt = getDueOfUserFromOtherUser(user.getId(), userid);
 
-            if (debt != 0 && due != 0) {
+            if (!(debt != 0 && due != 0)) {
                 JSONObject object = new JSONObject();
                 object.put("name", user.getUsername());
                 object.put("debt", debt);
