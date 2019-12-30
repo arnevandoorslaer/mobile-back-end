@@ -177,7 +177,17 @@ public class CleverService {
     }
 
     public List<Object> getProfileUserData(String username) {
-        return new ArrayList<Object>();
+        JSONArray output = new JSONArray();
+        long userid = userRepository.findByUsername(username).getId();
+        for (Event event : getEventsFromUser(username)) {
+            JSONObject object = new JSONObject();
+            object.put("event", event.getEventName());
+            object.put("debt", getDebtOfUserFromEvent(userid, event.getId()));
+            object.put("due", getDueOfUserFromEvent(userid, event.getId()));
+            output.put(object);
+        }
+        System.out.println(output.toString());
+        return output.toList();
     }
 
     public int login(String username, String hashedPassword) {
