@@ -21,11 +21,11 @@ public class CleverService {
     @Autowired
     private PaymentRepository paymentRepository;
 
-    public CleverService(){
+    public CleverService() {
 
     }
 
-    public List<User> getUsers(){
+    public List<User> getUsers() {
         return userRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 
@@ -33,15 +33,15 @@ public class CleverService {
         return userRepository.getOne(id);
     }
 
-    public void addUser(User user){
+    public void addUser(User user) {
         userRepository.save(user);
     }
 
-    public void removeUser(User user){
+    public void removeUser(User user) {
         userRepository.delete(user);
     }
 
-    public void removeUser(long userId){
+    public void removeUser(long userId) {
         userRepository.delete(this.userRepository.getOne(userId));
     }
 
@@ -49,7 +49,7 @@ public class CleverService {
         return userRepository.getOne(userid).getUsername();
     }
 
-    public void updateUser(User user){
+    public void updateUser(User user) {
         User oldUser = userRepository.findByUsername(user.getUsername());
         user.setId(oldUser.getId());
         userRepository.save(user);
@@ -59,15 +59,15 @@ public class CleverService {
         return eventRepository.getOne(id);
     }
 
-    public ArrayList<Event> getEvents(){
+    public ArrayList<Event> getEvents() {
         return (ArrayList<Event>) eventRepository.findAll(Sort.by(Sort.Direction.ASC, "startDate"));
     }
 
-    public void addEvent(Event event){
+    public void addEvent(Event event) {
         eventRepository.save(event);
     }
 
-    public void removeEvent(Event event){
+    public void removeEvent(Event event) {
         eventRepository.delete(event);
     }
 
@@ -75,13 +75,13 @@ public class CleverService {
         this.eventRepository.delete(this.eventRepository.getOne(eventid));
     }
 
-    public void updateEvent(Event event){
+    public void updateEvent(Event event) {
         Event oldEvent = eventRepository.findByEventName(event.getEventName());
         event.setId(oldEvent.getId());
         eventRepository.save(event);
     }
 
-    public void addParticipant(long userid,long eventid){
+    public void addParticipant(long userid, long eventid) {
         Event event = eventRepository.getOne(eventid);
         if (event.getParticipants().contains(userid)) {
             throw new ModelException("User is already in event");
@@ -179,4 +179,16 @@ public class CleverService {
     }
 
 
+    public List<Event> getEventsFromUser(String username) {
+        ArrayList<Event> events = new ArrayList<>();
+        Long userid = userRepository.findByUsername(username).getId();
+        for (Event event : eventRepository.findAll()) {
+            for (Long id : event.getParticipants()) {
+                if (userid.equals(id)) {
+                    events.add(event);
+                }
+            }
+        }
+        return events;
+    }
 }

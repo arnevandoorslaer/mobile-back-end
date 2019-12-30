@@ -262,4 +262,9 @@ public class Controller {
     public double getProfitOfUser(@PathVariable("eventid") long eventid, @PathVariable("userid") long userid) {
         return service.getDueOfUserFromEvent(userid, eventid);
     }
+
+    @GetMapping("user/events/{username}")
+    public List<Event> getEventsOfUsers(@PathVariable("username") String username) {
+        return service.getEventsFromUser(username.toLowerCase().trim());
+    }
 }
