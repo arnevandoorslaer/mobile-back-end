@@ -277,5 +277,26 @@ public class Controller {
     public List<Object> getProfileUserData(@PathVariable("username") String username) {
         return service.getProfileUserData(username);
     }
+
+    @GetMapping("user/totaldue/{username}")
+    public Object getTotalDue(@PathVariable("username") String username) {
+        return service.getTotalDue(username);
+    }
+
+    @GetMapping("user/totaldebt/{username}")
+    public Object getTotalDebt(@PathVariable("username") String username) {
+        return service.getTotalDebt(username);
+    }
+
+    @GetMapping("user/dueanddebtpereventforuser/{username}")
+    public Object getDueAndDebtPerEventForUser(@PathVariable("username") String username) {
+        return service.getDueAndDebtPerEventForUser(username);
+    }
+
+    @GetMapping("user/dueanddebtperuserforuser/{username}")
+    public Object getDueAndDebtPerUserForUser(@PathVariable("username") String username) {
+        return service.getDueAndDebtPerUserForUser(username);
+    }
+
 }
 
