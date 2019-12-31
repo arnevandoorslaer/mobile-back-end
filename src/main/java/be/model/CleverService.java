@@ -182,8 +182,8 @@ public class CleverService {
             if (!(debt == 0 && due == 0)) {
                 JSONObject object = new JSONObject();
                 object.put("name", name);
-                object.put("debt", debt);
-                object.put("due", due);
+                object.put("debt", Math.round(debt * 100) / 100.0);
+                object.put("due", Math.round(due * 100) / 100.0);
                 output.put(object);
             }
 
@@ -206,8 +206,8 @@ public class CleverService {
             if (!(debt == 0 && due == 0)) {
                 JSONObject object = new JSONObject();
                 object.put("name", name);
-                object.put("debt", debt);
-                object.put("due", due);
+                object.put("debt", Math.round(debt * 100) / 100.0);
+                object.put("due", Math.round(due * 100) / 100.0);
                 output.put(object);
             }
 
@@ -303,12 +303,10 @@ public class CleverService {
     }
 
     public List<Object[]> getDueAndDebtPerUserForUser(String username) {
-        String query = "select payer,due,debt from " +
-                "(select participants.participants,sum(amount/(select count(distinct participants) from cleverdivide.payment_participants p group by payment_id having p.payment_id = participants.payment_id)) as due from cleverdivide.payment payment inner join cleverdivide.payment_participants participants on (payment.id = participants.payment_id) group by payment.payer,participants.participants having payment.payer = " + userRepository.findByUsername(username).getId() +
-                ")as duequery " +
-                "natural full join " +
-                "(select payer,sum(amount/(select count(distinct participants) from cleverdivide.payment_participants p group by payment_id having p.payment_id = participants.payment_id)) as debt from cleverdivide.payment payment inner join cleverdivide.payment_participants participants on (payment.id = participants.payment_id) group by payment.payer,participants.participants having participants.participants = " + userRepository.findByUsername(username).getId() +
-                ")as debtquery";
+        String query = "select payer,due,debt from (select payer,participants.participants,sum(amount/(select count(distinct participants) from cleverdivide.payment_participants p group by payment_id having p.payment_id = participants.payment_id)) as due from cleverdivide.payment payment inner join cleverdivide.payment_participants participants on (payment.id = participants.payment_id) group by payment.payer,participants.participants having payment.payer = " + userRepository.findByUsername(username).getId() + "                )as duequery" +
+                "                natural full outer join " +
+                "                (select payer,participants,sum(amount/(select count(distinct participants) from cleverdivide.payment_participants p group by payment_id having p.payment_id = participants.payment_id)) as debt from cleverdivide.payment payment inner join cleverdivide.payment_participants participants on (payment.id = participants.payment_id) group by payment.payer,participants.participants having participants.participants = " + userRepository.findByUsername(username).getId() +
+                "                )as debtquery where payer != " + userRepository.findByUsername(username).getId();
         return getObjects(query);
     }
 
