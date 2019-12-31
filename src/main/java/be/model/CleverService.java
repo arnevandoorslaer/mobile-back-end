@@ -172,8 +172,8 @@ public class CleverService {
         JSONArray output = new JSONArray();
         for (Object[] array: getDueAndDebtPerEventForUser(username)) {
             BigInteger eventid = (BigInteger) array[0];
-            Double debt = (Double) array[1];
-            Double due = (Double) array[2];
+            Double debt = (Double) array[2];
+            Double due = (Double) array[1];
             String name = eventRepository.getOne(Long.valueOf(eventid.intValue())).getEventName();
 
             if(due == null) due = 0.0;
@@ -196,8 +196,8 @@ public class CleverService {
         JSONArray output = new JSONArray();
         for (Object[] array: getDueAndDebtPerUserForUser(username)) {
             BigInteger eventid = (BigInteger) array[0];
-            Double debt = (Double) array[1];
-            Double due = (Double) array[2];
+            Double debt = (Double) array[2];
+            Double due = (Double) array[1];
             String name = userRepository.getOne(Long.valueOf(eventid.intValue())).getUsername();
 
             if(due == null) due = 0.0;
@@ -269,14 +269,16 @@ public class CleverService {
     }
 
     public Object getTotalDebt(String username) {
-        String query = "select sum(pay.amount/(select count(distinct participants) from cleverdivide.payment_participants p group by payment_id having p.payment_id = part.payment_id)) from cleverdivide.payment_participants part inner join cleverdivide.payment pay on (pay.id = part.payment_id) where part.participants = " + userRepository.findByUsername(username).getId();
+        String query = "select sum(pay.amount/(select count(distinct participants) from cleverdivide.payment_participants p group by payment_id having p.payment_id = part.payment_id)) from cleverdivide.payment_participants part inner join cleverdivide.payment pay on (pay.id = part.payment_id) where part.participants = " + userRepository.findByUsername(username).getId() + "and payer != " + userRepository.findByUsername(username).getId();
         Object result;
         try {
             result = entityManager.createNativeQuery(query).getSingleResult();
         } catch (Exception e) {
             result = 0;
         }
-        return result;
+        if (result == null) result = 0.0;
+        double rounded = Math.round((double) result * 100) / 100.0;
+        return rounded;
     }
 
     public Object getTotalDue(String username) {
@@ -287,8 +289,9 @@ public class CleverService {
         } catch (Exception e) {
             result = 0;
         }
-        if (result == null) result = 0;
-        return result;
+        if (result == null) result = 0.0;
+        double rounded = Math.round((double) result * 100) / 100.0;
+        return rounded;
     }
 
     public List<Object[]> getDueAndDebtPerEventForUser(String username) {
