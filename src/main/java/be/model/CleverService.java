@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +25,8 @@ public class CleverService {
     private EventRepository eventRepository;
     @Autowired
     private PaymentRepository paymentRepository;
+    @PersistenceContext
+    EntityManager entityManager;
 
     public CleverService() {
 
@@ -36,6 +41,7 @@ public class CleverService {
     }
 
     public void addUser(User user) {
+        user.setUsername(user.getUsername().trim().toLowerCase());
         userRepository.save(user);
     }
 
@@ -164,31 +170,48 @@ public class CleverService {
 
     public List<Object> getProfileEventData(String username) {
         JSONArray output = new JSONArray();
-        long userid = userRepository.findByUsername(username).getId();
-        for (Event event : getEventsFromUser(username)) {
-            JSONObject object = new JSONObject();
-            object.put("event", event.getEventName());
-            object.put("debt", getDebtOfUserFromEvent(userid, event.getId()));
-            object.put("due", getDueOfUserFromEvent(userid, event.getId()));
-            output.put(object);
+        for (Object[] array: getDueAndDebtPerEventForUser(username)) {
+            BigInteger eventid = (BigInteger) array[0];
+            Double debt = (Double) array[2];
+            Double due = (Double) array[1];
+            String name = eventRepository.getOne(Long.valueOf(eventid.intValue())).getEventName();
+
+            if(due == null) due = 0.0;
+            if(debt == null) debt = 0.0;
+
+            if (!(debt == 0 && due == 0)) {
+                JSONObject object = new JSONObject();
+                object.put("name", name);
+                object.put("debt", Math.round(debt * 100) / 100.0);
+                object.put("due", Math.round(due * 100) / 100.0);
+                output.put(object);
+            }
+
         }
-        System.out.println(output.toString());
         return output.toList();
     }
 
+
     public List<Object> getProfileUserData(String username) {
         JSONArray output = new JSONArray();
-        long userid = userRepository.findByUsername(username).getId();
-        for (User user : getUsers()) {
-            double due = getDueOfUserFromOtherUser(userid, user.getId());
-            double debt = getDueOfUserFromOtherUser(user.getId(), userid);
-            JSONObject object = new JSONObject();
-            object.put("name", user.getUsername());
-            object.put("debt", debt);
-            object.put("due", due);
-            output.put(object);
+        for (Object[] array: getDueAndDebtPerUserForUser(username)) {
+            BigInteger eventid = (BigInteger) array[0];
+            Double debt = (Double) array[2];
+            Double due = (Double) array[1];
+            String name = userRepository.getOne(Long.valueOf(eventid.intValue())).getUsername();
+
+            if(due == null) due = 0.0;
+            if(debt == null) debt = 0.0;
+
+            if (!(debt == 0 && due == 0)) {
+                JSONObject object = new JSONObject();
+                object.put("name", name);
+                object.put("debt", Math.round(debt * 100) / 100.0);
+                object.put("due", Math.round(due * 100) / 100.0);
+                output.put(object);
+            }
+
         }
-        System.out.println(output.toString());
         return output.toList();
     }
 
@@ -244,4 +267,66 @@ public class CleverService {
         }
         return Math.round(total * 100) / 100.0;
     }
+
+    public Object getTotalDebt(String username) {
+        String query = "select sum(pay.amount/(select count(distinct participants) from cleverdivide.payment_participants p group by payment_id having p.payment_id = part.payment_id)) from cleverdivide.payment_participants part inner join cleverdivide.payment pay on (pay.id = part.payment_id) where part.participants = " + userRepository.findByUsername(username).getId() + "and payer != " + userRepository.findByUsername(username).getId();
+        Object result;
+        try {
+            result = entityManager.createNativeQuery(query).getSingleResult();
+        } catch (Exception e) {
+            result = 0;
+        }
+        if (result == null) result = 0.0;
+        double rounded = Math.round((double) result * 100) / 100.0;
+        return rounded;
+    }
+
+    public Object getTotalDue(String username) {
+        String query = "select sum(distinct pay.amount) from cleverdivide.payment_participants part inner join cleverdivide.payment pay on (pay.id = part.payment_id) inner join cleverdivide.user on (part.participants = cleverdivide.user.id) where pay.payer = " + userRepository.findByUsername(username).getId();
+        Object result;
+        try {
+            result = entityManager.createNativeQuery(query).getSingleResult();
+        } catch (Exception e) {
+            result = 0;
+        }
+        if (result == null) result = 0.0;
+        double rounded = Math.round((double) result * 100) / 100.0;
+        return rounded;
+    }
+
+    public List<Object[]> getDueAndDebtPerEventForUser(String username) {
+        String query = "select * " +
+                "from " +
+                "(select event_id,sum(distinct amount) as due from cleverdivide.payment payment inner join cleverdivide.event eventt on (eventt.id = payment.event_id) group by event_id,payer having payer = " + userRepository.findByUsername(username).getId() +
+                ")as duequery " +
+                "natural full join " +
+                "(select event_id,sum(amount/(select count(distinct participants) from cleverdivide.payment_participants p group by payment_id having p.payment_id = participants.payment_id)) as debt from cleverdivide.event eventt inner join cleverdivide.payment payment on (eventt.id = payment.event_id) inner join cleverdivide.payment_participants participants on (payment.id = participants.payment_id) group by participants.participants,event_id having participants.participants  = " + userRepository.findByUsername(username).getId() +
+                ")as debtquery";
+        return getObjects(query);
+    }
+
+    public List<Object[]> getDueAndDebtPerUserForUser(String username) {
+        String query = "select payer,due,debt from (select payer,participants.participants,sum(amount/(select count(distinct participants) from cleverdivide.payment_participants p group by payment_id having p.payment_id = participants.payment_id)) as due from cleverdivide.payment payment inner join cleverdivide.payment_participants participants on (payment.id = participants.payment_id) group by payment.payer,participants.participants having payment.payer = " + userRepository.findByUsername(username).getId() + "                )as duequery" +
+                "                natural full outer join " +
+                "                (select payer,participants,sum(amount/(select count(distinct participants) from cleverdivide.payment_participants p group by payment_id having p.payment_id = participants.payment_id)) as debt from cleverdivide.payment payment inner join cleverdivide.payment_participants participants on (payment.id = participants.payment_id) group by payment.payer,participants.participants having participants.participants = " + userRepository.findByUsername(username).getId() +
+                "                )as debtquery where payer != " + userRepository.findByUsername(username).getId();
+        return getObjects(query);
+    }
+
+    private List<Object[]> getObjects(String query) {
+        List<Object[]> result = new ArrayList<>();
+        try {
+            for (Object o : entityManager.createNativeQuery(query).getResultList()) {
+                if (o instanceof Object[]) {
+                    result.add((Object[]) o);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        return result;
+    }
+
+
 }
