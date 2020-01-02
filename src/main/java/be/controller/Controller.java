@@ -69,6 +69,8 @@ public class Controller {
         }
         else {
             try {
+                String username = user.getUsername();
+                user.setUsername(username.trim().toLowerCase());
                 service.addUser(user);
             } catch (DbException e) {
                 errors.add(e.getMessage());
@@ -91,6 +93,8 @@ public class Controller {
         }
         else {
             try {
+                String username = user.getUsername();
+                user.setUsername(username.trim().toLowerCase()); // voor de zekerheid
                 service.updateUser(user);
             } catch (DbException e) {
                 errors.add(e.getMessage());
