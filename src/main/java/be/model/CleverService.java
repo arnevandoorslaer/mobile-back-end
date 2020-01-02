@@ -5,6 +5,7 @@ package be.model;
 import be.db.EventRepository;
 import be.db.PaymentRepository;
 import be.db.UserRepository;
+import javassist.NotFoundException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +58,15 @@ public class CleverService {
         return userRepository.getOne(userid).getUsername();
     }
 
+    public long getUserIdOfUsername(String username) {
+        for (User u : getUsers()) {
+            if (username.trim().toLowerCase().equals(u.getUsername())) {
+                return u.getId();
+            }
+        }
+        throw new IllegalArgumentException("User with username: "+username+" not found");
+    }
+
     public void updateUser(User user) {
         User oldUser = userRepository.findByUsername(user.getUsername());
         user.setId(oldUser.getId());
@@ -96,6 +106,11 @@ public class CleverService {
         }
         event.addParticipant(userRepository.getOne(userid).getId());
         updateEvent(event);
+    }
+
+    public void addParticipantByUsername(String username, long eventid) {
+        long userid = getUserIdOfUsername(username);
+        addParticipant(userid, eventid);
     }
 
     public void removeParticipant(long userid, long eventid) {

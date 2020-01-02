@@ -192,6 +192,12 @@ public class Controller {
         service.addParticipant(userId, eventId);
     }
 
+    @PostMapping("/event/{eventid}/participants/addusername/{userid}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addParticipantByUsername(@PathVariable("eventid") long eventId, @PathVariable("userid") String username) {
+        service.addParticipantByUsername(username, eventId);
+    }
+
     @PostMapping("/event/{eventid}/participants/del/{userid}")
     @ResponseStatus(HttpStatus.CREATED)
     public void delParticipant(@PathVariable("eventid") long eventId, @PathVariable("userid") long userId) {
