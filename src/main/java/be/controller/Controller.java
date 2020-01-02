@@ -194,7 +194,7 @@ public class Controller {
         service.removeParticipant(userId, eventId);
     }
 
-    @GetMapping("/event/{eventid}/participant/{userid}/debt")
+    @GetMapping("/event/{eventid}/p articipant/{userid}/debt")
     public double getDebtOfUserFromEvent(@PathVariable("eventid") long eventId, @PathVariable("userid") long userId) {
         return service.getDebtOfUserFromEvent(userId, eventId);
     }
