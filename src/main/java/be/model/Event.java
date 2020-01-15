@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Event {
@@ -19,7 +20,9 @@ public class Event {
     @JsonFormat(pattern="dd-MM-yyyy HH:mm:ss")
     private LocalDateTime startDate, endDate;
     private String location;
-    private ArrayList<Long> participants;
+    @NotNull(message = "participants (betalers) list can't be null")
+    @ElementCollection(targetClass=Long.class)
+    private List<Long> participants;
     private String extraInfo;
     private String picPath;
 
@@ -36,7 +39,7 @@ public class Event {
     }
 
     public ArrayList<Long> getParticipants() {
-        return participants;
+        return (ArrayList<Long>) participants;
     }
 
     public void addParticipant(long userid){
