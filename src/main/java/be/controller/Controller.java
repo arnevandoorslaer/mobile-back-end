@@ -288,12 +288,12 @@ public class Controller {
         return service.getProfileUserData(username);
     }
 
-    @GetMapping("user/totaldue/{username}")
+    @GetMapping("user/verkrijgen/{username}")
     public Object getTotalDue(@PathVariable("username") String username) {
         return service.getTotalDue(username);
     }
 
-    @GetMapping("user/totaldebt/{username}")
+    @GetMapping("user/geven/{username}")
     public Object getTotalDebt(@PathVariable("username") String username) {
         return service.getTotalDebt(username);
     }
