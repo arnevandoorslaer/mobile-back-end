@@ -69,6 +69,8 @@ public class Controller {
         }
         else {
             try {
+                String username = user.getUsername();
+                user.setUsername(username.trim().toLowerCase());
                 service.addUser(user);
             } catch (DbException e) {
                 errors.add(e.getMessage());
@@ -91,6 +93,8 @@ public class Controller {
         }
         else {
             try {
+                String username = user.getUsername();
+                user.setUsername(username.trim().toLowerCase()); // voor de zekerheid
                 service.updateUser(user);
             } catch (DbException e) {
                 errors.add(e.getMessage());
@@ -188,13 +192,19 @@ public class Controller {
         service.addParticipant(userId, eventId);
     }
 
+    @PostMapping("/event/{eventid}/participants/addusername/{userid}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addParticipantByUsername(@PathVariable("eventid") long eventId, @PathVariable("userid") String username) {
+        service.addParticipantByUsername(username, eventId);
+    }
+
     @PostMapping("/event/{eventid}/participants/del/{userid}")
     @ResponseStatus(HttpStatus.CREATED)
     public void delParticipant(@PathVariable("eventid") long eventId, @PathVariable("userid") long userId) {
         service.removeParticipant(userId, eventId);
     }
 
-    @GetMapping("/event/{eventid}/participant/{userid}/debt")
+    @GetMapping("/event/{eventid}/p articipant/{userid}/debt")
     public double getDebtOfUserFromEvent(@PathVariable("eventid") long eventId, @PathVariable("userid") long userId) {
         return service.getDebtOfUserFromEvent(userId, eventId);
     }
