@@ -313,5 +313,9 @@ public class Controller {
         return service.getPaymentInformation(username);
     }
 
+    @GetMapping("markpayment/{payer}/{payment_id}")
+    public int updatePaymentState(@PathVariable("payer") String username,@PathVariable("payment_id") int payment_id) {
+        return service.updatePaymentState(payment_id,username);
+    }
 }
 

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -500,5 +501,14 @@ public class CleverService {
         return result;
     }
 
+    @Transactional()
+    public int updatePaymentState(int payment_id,String username){
+        long id = userRepository.findByUsername(username).getId();
+        String query = "update cleverdivide.payment_participants\n" +
+                "set isbetaald = true\n" +
+                "where payment_id = "+payment_id+"\n" +
+                "and participants = "+id+"".replaceAll("\n"," ");
+        return  entityManager.createNativeQuery(query).executeUpdate();
+    }
 
 }
