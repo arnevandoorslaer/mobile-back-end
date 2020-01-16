@@ -5,7 +5,6 @@ package be.model;
 import be.db.EventRepository;
 import be.db.PaymentRepository;
 import be.db.UserRepository;
-import javassist.NotFoundException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,7 +79,12 @@ public class CleverService {
     }
 
     public ArrayList<Event> getEvents() {
-        return (ArrayList<Event>) eventRepository.findAll(Sort.by(Sort.Direction.ASC, "startDate"));
+        try{
+            return (ArrayList<Event>) eventRepository.findAll(Sort.by(Sort.Direction.ASC, "startDate"));
+        }catch (Exception e){
+            return (ArrayList<Event>) eventRepository.findAll();
+        }
+
     }
 
     public void addEvent(Event event) {
