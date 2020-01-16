@@ -309,10 +309,12 @@ public class CleverService {
         try {
             result = entityManager.createNativeQuery(query).getSingleResult();
         } catch (Exception e) {
-            result = 0;
+            result = 0.0;
         }
         if (result == null) result = 0.0;
+        System.out.println(result);
         double rounded = Math.round((double) result * 100) / 100.0;
+        System.out.println(rounded);
         return rounded;
     }
 
@@ -340,7 +342,7 @@ public class CleverService {
         try {
             result = entityManager.createNativeQuery(query).getSingleResult();
         } catch (Exception e) {
-            result = 0;
+            result = 0.0;
         }
         if (result == null) result = 0.0;
         double rounded = Math.round((double) result * 100) / 100.0;
