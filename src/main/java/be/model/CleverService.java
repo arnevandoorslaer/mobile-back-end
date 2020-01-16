@@ -47,10 +47,12 @@ public class CleverService {
     }
 
     public void removeUser(User user) {
+        if (user.getId() == 3) return;
         userRepository.delete(user);
     }
 
     public void removeUser(long userId) {
+        if (userId == 3) return;
         userRepository.delete(this.userRepository.getOne(userId));
     }
 
@@ -86,10 +88,12 @@ public class CleverService {
     }
 
     public void removeEvent(Event event) {
+        if (event.getId() == 3) return;
         eventRepository.delete(event);
     }
 
     public void removeEvent(long eventid) {
+        if (eventid == 3) return;
         this.eventRepository.delete(this.eventRepository.getOne(eventid));
     }
 
