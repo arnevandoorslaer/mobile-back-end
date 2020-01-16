@@ -308,5 +308,10 @@ public class Controller {
         return service.getDueAndDebtPerUserForUser(username);
     }
 
+    @GetMapping("user/{username}/payments")
+    public Object getPaymentInformation(@PathVariable("username") String username) {
+        return service.getPaymentInformation(username);
+    }
+
 }
 

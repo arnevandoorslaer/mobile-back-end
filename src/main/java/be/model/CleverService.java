@@ -191,6 +191,23 @@ public class CleverService {
 
     }
 
+    public List<Object> getPaymentInformation(String username){
+        JSONArray output = new JSONArray();
+        for (Object[] array: getPaymentInformationForUser(username)) {
+            BigInteger id = (BigInteger) array[0];
+            String message = (String) array[1];
+            Double price = (Double) array[2];
+            boolean betaald = (boolean) array[3];
+                JSONObject object = new JSONObject();
+                object.put("id", id);
+                object.put("message",message);
+                object.put("price", Math.round(price * 100) / 100.0);
+                object.put("betaald", betaald);
+                output.put(object);
+        }
+        return output.toList();
+    }
+
     public List<Object> getProfileEventData(String username) {
         JSONArray output = new JSONArray();
         for (Object[] array: getDueAndDebtPerEventForUser(username)) {
@@ -287,24 +304,26 @@ public class CleverService {
 
     public Object getTotalDue(String username) {
         long id = userRepository.findByUsername(username).getId();
-        String query = "select sum(price_per_user) as topay " +
-                "from (SELECT payment_participants.payment_id,\n" +
-                "    payment.payer, " +
-                "    payment_participants.participants AS payee, " +
-                "    payment.amount, " +
-                "    payment.event_id, " +
-                "    (payment.amount / (( SELECT users_per_payment.users " +
+        String query = "select sum(price_per_user) as topay\n" +
+                "from ( SELECT payment_participants.payment_id,\n" +
+                "    payment.payer,\n" +
+                "\tpayment.message,\n" +
+                "    payment_participants.participants AS payee,\n" +
+                "    payment.amount,\n" +
+                "    payment.event_id,\n" +
+                "\tpayment_participants.isBetaald as betaald,\n" +
+                "    (payment.amount / (( SELECT users_per_payment.users\n" +
                 "           FROM cleverdivide.users_per_payment\n" +
-                "          WHERE users_per_payment.id = payment_participants.payment_id))) AS price_per_user, " +
-                "    ( SELECT users_per_payment.users " +
-                "           FROM cleverdivide.users_per_payment " +
-                "          WHERE users_per_payment.id = payment_participants.payment_id) AS total_payees " +
+                "          WHERE users_per_payment.id = payment_participants.payment_id))) AS price_per_user,\n" +
+                "    ( SELECT users_per_payment.users\n" +
+                "           FROM cleverdivide.users_per_payment\n" +
+                "          WHERE users_per_payment.id = payment_participants.payment_id) AS total_payees\n" +
                 "   FROM cleverdivide.payment\n" +
-                "     JOIN cleverdivide.payment_participants ON payment_participants.payment_id = payment.id " +
-                "     JOIN cleverdivide.event ON payment.event_id = event.id) as payment_info " +
-                "where payer = "+id+" and payee != "+id+" " +
-                "group by payer " +
-                "order by payer";
+                "     JOIN cleverdivide.payment_participants ON payment_participants.payment_id = payment.id\n" +
+                "     JOIN cleverdivide.event ON payment.event_id = event.id) as payment_info\n" +
+                "where payer = 7 and payee != 7 and betaald = false\n" +
+                "group by payer\n" +
+                "order by payer".replaceAll("\t"," ").replaceAll("\n"," ").replaceAll("7", String.valueOf(id));
         Object result;
         try {
             result = entityManager.createNativeQuery(query).getSingleResult();
@@ -312,32 +331,32 @@ public class CleverService {
             result = 0.0;
         }
         if (result == null) result = 0.0;
-        System.out.println(result);
         double rounded = Math.round((double) result * 100) / 100.0;
-        System.out.println(rounded);
         return rounded;
     }
 
     public Object getTotalDebt(String username) {
         long id = userRepository.findByUsername(username).getId();
-        String query = "select sum(price_per_user) as topay " +
-                "from (SELECT payment_participants.payment_id, " +
-                "    payment.payer, " +
-                "    payment_participants.participants AS payee, " +
-                "    payment.amount, " +
-                "    payment.event_id, " +
-                "    (payment.amount / (( SELECT users_per_payment.users " +
-                "           FROM cleverdivide.users_per_payment " +
-                "          WHERE users_per_payment.id = payment_participants.payment_id))) AS price_per_user, " +
+        String query = "select sum(price_per_user) as topay\n" +
+                "from ( SELECT payment_participants.payment_id,\n" +
+                "    payment.payer,\n" +
+                "\tpayment.message,\n" +
+                "    payment_participants.participants AS payee,\n" +
+                "    payment.amount,\n" +
+                "    payment.event_id,\n" +
+                "\tpayment_participants.isBetaald as betaald,\n" +
+                "    (payment.amount / (( SELECT users_per_payment.users\n" +
+                "           FROM cleverdivide.users_per_payment\n" +
+                "          WHERE users_per_payment.id = payment_participants.payment_id))) AS price_per_user,\n" +
                 "    ( SELECT users_per_payment.users\n" +
-                "           FROM cleverdivide.users_per_payment " +
-                "          WHERE users_per_payment.id = payment_participants.payment_id) AS total_payees " +
-                "   FROM cleverdivide.payment " +
-                "     JOIN cleverdivide.payment_participants ON payment_participants.payment_id = payment.id " +
-                "     JOIN cleverdivide.event ON payment.event_id = event.id) as payment_info " +
-                "where payee = "+id+" and payer != "+id+" " +
-                "group by payee " +
-                "order by payee";
+                "           FROM cleverdivide.users_per_payment\n" +
+                "          WHERE users_per_payment.id = payment_participants.payment_id) AS total_payees\n" +
+                "   FROM cleverdivide.payment\n" +
+                "     JOIN cleverdivide.payment_participants ON payment_participants.payment_id = payment.id\n" +
+                "     JOIN cleverdivide.event ON payment.event_id = event.id) as payment_info\n" +
+                "where payee = 7 and payer != 7 and betaald = false\n" +
+                "group by payee\n" +
+                "order by payee".replaceAll("\t"," ").replaceAll("\n"," ").replaceAll("7", String.valueOf(id));;
         Object result;
         try {
             result = entityManager.createNativeQuery(query).getSingleResult();
@@ -351,85 +370,114 @@ public class CleverService {
 
     public List<Object[]> getDueAndDebtPerEventForUser(String username) {
         long id = userRepository.findByUsername(username).getId();
-        String query = "select id,coalesce(verkrijgen,0) as verkrijgen,coalesce(geven,0) as geven " +
-                "from (select event_id as id,sum(price_per_user) as geven " +
-                "from (SELECT payment_participants.payment_id, " +
-                "    payment.payer, " +
-                "    payment_participants.participants AS payee, " +
-                "    payment.amount, " +
-                "    payment.event_id, " +
-                "    (payment.amount / (( SELECT users_per_payment.users " +
-                "           FROM cleverdivide.users_per_payment " +
-                "          WHERE users_per_payment.id = payment_participants.payment_id))) AS price_per_user, " +
-                "    ( SELECT users_per_payment.users " +
-                "           FROM cleverdivide.users_per_payment " +
-                "          WHERE users_per_payment.id = payment_participants.payment_id) AS total_payees " +
-                "   FROM cleverdivide.payment " +
-                "     JOIN cleverdivide.payment_participants ON payment_participants.payment_id = payment.id " +
-                "     JOIN cleverdivide.event ON payment.event_id = event.id) as payment_info " +
-                "where payee = "+id+" and payer != "+id+" " +
-                "group by event_id) as v " +
-                "natural full join " +
-                "(select event_id as id,sum(price_per_user) as verkrijgen " +
-                "from (SELECT payment_participants.payment_id, " +
-                "    payment.payer, " +
-                "    payment_participants.participants AS payee, " +
-                "    payment.amount, " +
-                "    payment.event_id, " +
-                "    (payment.amount / (( SELECT users_per_payment.users " +
-                "           FROM cleverdivide.users_per_payment " +
-                "          WHERE users_per_payment.id = payment_participants.payment_id))) AS price_per_user, " +
-                "    ( SELECT users_per_payment.users " +
-                "           FROM cleverdivide.users_per_payment " +
-                "          WHERE users_per_payment.id = payment_participants.payment_id) AS total_payees " +
-                "   FROM cleverdivide.payment " +
-                "     JOIN cleverdivide.payment_participants ON payment_participants.payment_id = payment.id " +
-                "     JOIN cleverdivide.event ON payment.event_id = event.id) as payment_info " +
-                "where payer = "+id+" and payee != "+id+" " +
-                "group by event_id) as g";
-        System.out.println(query);
+        String query = "select id,coalesce(verkrijgen,0) as verkrijgen ,coalesce(geven,0) as geven\n" +
+                "from (select event_id as id,sum(price_per_user) as geven\n" +
+                "from ( SELECT payment_participants.payment_id,\n" +
+                "    payment.payer,\n" +
+                "\tpayment.message,\n" +
+                "    payment_participants.participants AS payee,\n" +
+                "    payment.amount,\n" +
+                "    payment.event_id,\n" +
+                "\tpayment_participants.isBetaald as betaald,\n" +
+                "    (payment.amount / (( SELECT users_per_payment.users\n" +
+                "           FROM cleverdivide.users_per_payment\n" +
+                "          WHERE users_per_payment.id = payment_participants.payment_id))) AS price_per_user,\n" +
+                "    ( SELECT users_per_payment.users\n" +
+                "           FROM cleverdivide.users_per_payment\n" +
+                "          WHERE users_per_payment.id = payment_participants.payment_id) AS total_payees\n" +
+                "   FROM cleverdivide.payment\n" +
+                "     JOIN cleverdivide.payment_participants ON payment_participants.payment_id = payment.id\n" +
+                "     JOIN cleverdivide.event ON payment.event_id = event.id) as payment_info\n" +
+                "where payee = 7 and payer != 7 and betaald = false\n" +
+                "group by event_id) as v\n" +
+                "natural full join\n" +
+                "(select event_id as id,sum(price_per_user) as verkrijgen\n" +
+                "from ( SELECT payment_participants.payment_id,\n" +
+                "    payment.payer,\n" +
+                "\tpayment.message,\n" +
+                "    payment_participants.participants AS payee,\n" +
+                "    payment.amount,\n" +
+                "    payment.event_id,\n" +
+                "\tpayment_participants.isBetaald as betaald,\n" +
+                "    (payment.amount / (( SELECT users_per_payment.users\n" +
+                "           FROM cleverdivide.users_per_payment\n" +
+                "          WHERE users_per_payment.id = payment_participants.payment_id))) AS price_per_user,\n" +
+                "    ( SELECT users_per_payment.users\n" +
+                "           FROM cleverdivide.users_per_payment\n" +
+                "          WHERE users_per_payment.id = payment_participants.payment_id) AS total_payees\n" +
+                "   FROM cleverdivide.payment\n" +
+                "     JOIN cleverdivide.payment_participants ON payment_participants.payment_id = payment.id\n" +
+                "     JOIN cleverdivide.event ON payment.event_id = event.id) as payment_info\n" +
+                "where payer = 7 and payee != 7 and betaald = false\n" +
+                "group by event_id) as g".replaceAll("\t"," ").replaceAll("\n"," ").replaceAll("7", String.valueOf(id));
         return getObjects(query);
     }
 
     public List<Object[]> getDueAndDebtPerUserForUser(String username) {
         long id = userRepository.findByUsername(username).getId();
+        String query = "select id,coalesce(verkrijgen,0) as verkrijgen,coalesce(geven,0) as geven\n" +
+                "from (select payer as id,sum(price_per_user) as geven\n" +
+                "from (SELECT payment_participants.payment_id,\n" +
+                "    payment.payer,\n" +
+                "\tpayment.message,\n" +
+                "    payment_participants.participants AS payee,\n" +
+                "    payment.amount,\n" +
+                "    payment.event_id,\n" +
+                "\tpayment_participants.isBetaald as betaald,\n" +
+                "    (payment.amount / (( SELECT users_per_payment.users\n" +
+                "           FROM cleverdivide.users_per_payment\n" +
+                "          WHERE users_per_payment.id = payment_participants.payment_id))) AS price_per_user,\n" +
+                "    ( SELECT users_per_payment.users\n" +
+                "           FROM cleverdivide.users_per_payment\n" +
+                "          WHERE users_per_payment.id = payment_participants.payment_id) AS total_payees\n" +
+                "   FROM cleverdivide.payment\n" +
+                "     JOIN cleverdivide.payment_participants ON payment_participants.payment_id = payment.id\n" +
+                "     JOIN cleverdivide.event ON payment.event_id = event.id) as payment_info\n" +
+                "where payee = 7 and payer != 7 and betaald = false\n" +
+                "group by payer) as v\n" +
+                "natural full join\n" +
+                "(select payee as id,sum(price_per_user) as verkrijgen\n" +
+                "from (SELECT payment_participants.payment_id,\n" +
+                "    payment.payer,\n" +
+                "\tpayment.message,\n" +
+                "    payment_participants.participants AS payee,\n" +
+                "    payment.amount,\n" +
+                "    payment.event_id,\n" +
+                "\tpayment_participants.isBetaald as betaald,\n" +
+                "    (payment.amount / (( SELECT users_per_payment.users\n" +
+                "           FROM cleverdivide.users_per_payment\n" +
+                "          WHERE users_per_payment.id = payment_participants.payment_id))) AS price_per_user,\n" +
+                "    ( SELECT users_per_payment.users\n" +
+                "           FROM cleverdivide.users_per_payment\n" +
+                "          WHERE users_per_payment.id = payment_participants.payment_id) AS total_payees\n" +
+                "   FROM cleverdivide.payment\n" +
+                "     JOIN cleverdivide.payment_participants ON payment_participants.payment_id = payment.id\n" +
+                "     JOIN cleverdivide.event ON payment.event_id = event.id) as payment_info\n" +
+                "where payer = 7 and payee != 7 and betaald = false\n" +
+                "group by payee) as g".replaceAll("\t"," ").replaceAll("\n"," ").replaceAll("7", String.valueOf(id));
+        return getObjects(query);
+    }
 
-        String query = "select id,coalesce(verkrijgen,0) as verkrijgen,coalesce(geven,0) as geven " +
-                "from (select payer as id,sum(price_per_user) as geven " +
-                "from (SELECT payment_participants.payment_id, " +
-                "    payment.payer, " +
-                "    payment_participants.participants AS payee, " +
-                "    payment.amount, " +
-                "    payment.event_id, " +
-                "    (payment.amount / (( SELECT users_per_payment.users " +
-                "           FROM cleverdivide.users_per_payment " +
-                "          WHERE users_per_payment.id = payment_participants.payment_id))) AS price_per_user, " +
-                "    ( SELECT users_per_payment.users " +
-                "           FROM cleverdivide.users_per_payment " +
-                "          WHERE users_per_payment.id = payment_participants.payment_id) AS total_payees " +
-                "   FROM cleverdivide.payment " +
-                "     JOIN cleverdivide.payment_participants ON payment_participants.payment_id = payment.id " +
-                "     JOIN cleverdivide.event ON payment.event_id = event.id) as payment_info " +
-                "where payee = "+id+" and payer != "+id+" " +
-                "group by payer) as v " +
-                "natural full join " +
-                "(select payee as id,sum(price_per_user) as verkrijgen " +
-                "from (SELECT payment_participants.payment_id, " +
-                "    payment.payer, " +
-                "    payment_participants.participants AS payee, " +
-                "    payment.amount, " +
-                "    payment.event_id, " +
-                "    (payment.amount / (( SELECT users_per_payment.users " +
-                "           FROM cleverdivide.users_per_payment " +
-                "          WHERE users_per_payment.id = payment_participants.payment_id))) AS price_per_user, " +
-                "    ( SELECT users_per_payment.users " +
-                "           FROM cleverdivide.users_per_payment " +
-                "          WHERE users_per_payment.id = payment_participants.payment_id) AS total_payees " +
-                "   FROM cleverdivide.payment " +
-                "     JOIN cleverdivide.payment_participants ON payment_participants.payment_id = payment.id " +
-                "     JOIN cleverdivide.event ON payment.event_id = event.id) as payment_info " +
-                "where payer = "+id+" and payee != "+id+" " +
-                "group by payee) as g";
+    public List<Object[]> getPaymentInformationForUser(String username){
+        long id = userRepository.findByUsername(username).getId();
+        String query = "\t select payer as id ,message as description,price_per_user as bedrag,betaald\n" +
+                "\t from ( SELECT payment_participants.payment_id,\n" +
+                "    payment.payer,\n" +
+                "\tpayment.message,\n" +
+                "    payment_participants.participants AS payee,\n" +
+                "    payment.amount,\n" +
+                "    payment.event_id,\n" +
+                "\tpayment_participants.isBetaald as betaald,\n" +
+                "    (payment.amount / (( SELECT users_per_payment.users\n" +
+                "           FROM cleverdivide.users_per_payment\n" +
+                "          WHERE users_per_payment.id = payment_participants.payment_id))) AS price_per_user,\n" +
+                "    ( SELECT users_per_payment.users\n" +
+                "           FROM cleverdivide.users_per_payment\n" +
+                "          WHERE users_per_payment.id = payment_participants.payment_id) AS total_payees\n" +
+                "   FROM cleverdivide.payment\n" +
+                "     JOIN cleverdivide.payment_participants ON payment_participants.payment_id = payment.id\n" +
+                "     JOIN cleverdivide.event ON payment.event_id = event.id) as payment_info\n" +
+                "\t where payee = 7 and payer != 7".replaceAll("\t"," ").replaceAll("\n"," ").replaceAll("7", String.valueOf(id));
         return getObjects(query);
     }
 
