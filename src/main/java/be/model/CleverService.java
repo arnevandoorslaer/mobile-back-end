@@ -5,7 +5,6 @@ package be.model;
 import be.db.EventRepository;
 import be.db.PaymentRepository;
 import be.db.UserRepository;
-import javassist.NotFoundException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;

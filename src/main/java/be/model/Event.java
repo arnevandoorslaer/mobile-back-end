@@ -38,8 +38,8 @@ public class Event {
         this.id = id;
     }
 
-    public ArrayList<Long> getParticipants() {
-        return (ArrayList<Long>) participants;
+    public List<Long> getParticipants() {
+        return participants;
     }
 
     public void addParticipant(long userid){
