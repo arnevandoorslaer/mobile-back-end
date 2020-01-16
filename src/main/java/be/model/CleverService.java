@@ -197,12 +197,14 @@ public class CleverService {
             BigInteger id = (BigInteger) array[0];
             String message = (String) array[1];
             Double price = (Double) array[2];
+            Integer payment_id = (Integer) array[4];
             boolean betaald = (boolean) array[3];
                 JSONObject object = new JSONObject();
                 object.put("id", id);
                 object.put("message",message);
                 object.put("price", Math.round(price * 100) / 100.0);
                 object.put("betaald", betaald);
+                object.put("payment_id", payment_id);
                 output.put(object);
         }
         return output.toList();
@@ -460,7 +462,7 @@ public class CleverService {
 
     public List<Object[]> getPaymentInformationForUser(String username){
         long id = userRepository.findByUsername(username).getId();
-        String query = "\t select payer as id ,message as description,price_per_user as bedrag,betaald\n" +
+        String query = "\t select payer as id ,message as description,price_per_user as bedrag,betaald,payment_id\n" +
                 "\t from ( SELECT payment_participants.payment_id,\n" +
                 "    payment.payer,\n" +
                 "\tpayment.message,\n" +
