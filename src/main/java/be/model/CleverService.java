@@ -37,7 +37,7 @@ public class CleverService {
     }
 
     public User getUser(long id) {
-        return userRepository.getOne(id);
+        return userRepository.findById(id).get();
     }
 
     public void addUser(User user) {
@@ -73,7 +73,7 @@ public class CleverService {
     }
 
     public Event getEvent(long id) {
-        return eventRepository.getOne(id);
+        return eventRepository.findById(id).get();
     }
 
     public ArrayList<Event> getEvents() {
