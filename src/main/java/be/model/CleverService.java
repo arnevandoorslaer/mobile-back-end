@@ -321,9 +321,9 @@ public class CleverService {
                 "   FROM cleverdivide.payment\n" +
                 "     JOIN cleverdivide.payment_participants ON payment_participants.payment_id = payment.id\n" +
                 "     JOIN cleverdivide.event ON payment.event_id = event.id) as payment_info\n" +
-                "where payer = 7 and payee != 7 and betaald = false\n" +
+                "where payer = "+id+" and payee != "+id+" and betaald = false\n" +
                 "group by payer\n" +
-                "order by payer".replaceAll("\t"," ").replaceAll("\n"," ").replaceAll("7", String.valueOf(id));
+                "order by payer".replaceAll("\t"," ").replaceAll("\n"," ");
         Object result;
         try {
             result = entityManager.createNativeQuery(query).getSingleResult();
@@ -354,9 +354,9 @@ public class CleverService {
                 "   FROM cleverdivide.payment\n" +
                 "     JOIN cleverdivide.payment_participants ON payment_participants.payment_id = payment.id\n" +
                 "     JOIN cleverdivide.event ON payment.event_id = event.id) as payment_info\n" +
-                "where payee = 7 and payer != 7 and betaald = false\n" +
+                "where payee = "+id+" and payer != "+id+" and betaald = false\n" +
                 "group by payee\n" +
-                "order by payee".replaceAll("\t"," ").replaceAll("\n"," ").replaceAll("7", String.valueOf(id));;
+                "order by payee".replaceAll("\t"," ").replaceAll("\n"," ");
         Object result;
         try {
             result = entityManager.createNativeQuery(query).getSingleResult();
@@ -388,7 +388,7 @@ public class CleverService {
                 "   FROM cleverdivide.payment\n" +
                 "     JOIN cleverdivide.payment_participants ON payment_participants.payment_id = payment.id\n" +
                 "     JOIN cleverdivide.event ON payment.event_id = event.id) as payment_info\n" +
-                "where payee = 7 and payer != 7 and betaald = false\n" +
+                "where payee = "+id+" and payer != "+id+" and betaald = false\n" +
                 "group by event_id) as v\n" +
                 "natural full join\n" +
                 "(select event_id as id,sum(price_per_user) as verkrijgen\n" +
@@ -408,8 +408,8 @@ public class CleverService {
                 "   FROM cleverdivide.payment\n" +
                 "     JOIN cleverdivide.payment_participants ON payment_participants.payment_id = payment.id\n" +
                 "     JOIN cleverdivide.event ON payment.event_id = event.id) as payment_info\n" +
-                "where payer = 7 and payee != 7 and betaald = false\n" +
-                "group by event_id) as g".replaceAll("\t"," ").replaceAll("\n"," ").replaceAll("7", String.valueOf(id));
+                "where payer = "+id+" and payee != "+id+" and betaald = false\n" +
+                "group by event_id) as g".replaceAll("\t"," ").replaceAll("\n"," ");
         return getObjects(query);
     }
 
@@ -433,7 +433,7 @@ public class CleverService {
                 "   FROM cleverdivide.payment\n" +
                 "     JOIN cleverdivide.payment_participants ON payment_participants.payment_id = payment.id\n" +
                 "     JOIN cleverdivide.event ON payment.event_id = event.id) as payment_info\n" +
-                "where payee = 7 and payer != 7 and betaald = false\n" +
+                "where payee = "+id+" and payer != "+id+" and betaald = false\n" +
                 "group by payer) as v\n" +
                 "natural full join\n" +
                 "(select payee as id,sum(price_per_user) as verkrijgen\n" +
@@ -453,8 +453,8 @@ public class CleverService {
                 "   FROM cleverdivide.payment\n" +
                 "     JOIN cleverdivide.payment_participants ON payment_participants.payment_id = payment.id\n" +
                 "     JOIN cleverdivide.event ON payment.event_id = event.id) as payment_info\n" +
-                "where payer = 7 and payee != 7 and betaald = false\n" +
-                "group by payee) as g".replaceAll("\t"," ").replaceAll("\n"," ").replaceAll("7", String.valueOf(id));
+                "where payer = "+id+" and payee != "+id+" and betaald = false\n" +
+                "group by payee) as g".replaceAll("\t"," ").replaceAll("\n"," ");
         return getObjects(query);
     }
 
@@ -477,8 +477,10 @@ public class CleverService {
                 "   FROM cleverdivide.payment\n" +
                 "     JOIN cleverdivide.payment_participants ON payment_participants.payment_id = payment.id\n" +
                 "     JOIN cleverdivide.event ON payment.event_id = event.id) as payment_info\n" +
-                "\t where payee = 7 and payer != 7".replaceAll("\t"," ").replaceAll("\n"," ").replaceAll("7", String.valueOf(id));
+                "\t where payee = "+id+" and payer != "+id+"".replaceAll("\t"," ").replaceAll("\n"," ");
+        System.out.println(query);
         return getObjects(query);
+
     }
 
     private List<Object[]> getObjects(String query) {
